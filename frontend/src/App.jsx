@@ -7,6 +7,11 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
+// actions
+import {action as registerAction} from './pages/Register'
+import {action as loginAction} from './pages/Login'
+
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -20,11 +25,13 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Login />
+    element: <Login />,
+    action: loginAction,
   },
   {
     path: '/register',
-    element: <Register />
+    element: <Register />,
+    action: registerAction
   }
 ])
 

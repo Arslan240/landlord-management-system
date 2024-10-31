@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
     extend: {
+      borderRadius: {
+        card: '1.25rem' 
+      },
       colors: {
         primary: {
           DEFAULT: '#545C75',
@@ -30,7 +33,20 @@ export default {
   },
   plugins: [
     // require('preline/plugin'),
+    // require("@tailwindcss/typography"),
     require('daisyui')
   ],
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          'primary' : '#545C75',
+          'secondary' : '#6E62E5',
+          'accent': '#23C35E',
+          'warning': '#FD6365'
+        }
+      },
+      'winter', 'dracula']
+  }
 }
 
