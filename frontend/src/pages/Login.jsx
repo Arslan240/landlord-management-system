@@ -1,17 +1,19 @@
-import { Form, Link } from "react-router-dom"
+import { Form, Link, redirect } from "react-router-dom"
 import FormInput from "../components/FormInput"
 import HomeIcon from '../components/HomeIcon'
 import SubmitBtn from "../components/SubmitBtn";
 import { customFetch } from "../utils/customFetch";
 import CentreTemplate from "./CentreTemplate";
+import { toast } from "react-toastify";
 
 export const action = async ({ request }) => {
   console.log('login action');
   const formData = Object.fromEntries(await request.formData())
-  const resp = await customFetch.get('/auth/login', formData)
-  const { data } = resp
-  console.log(data);
-  return null
+  const { data } = await customFetch.post('/auth/login', formData)
+  const { user } = data.user
+  console.log(user);
+  toast.success(`Welcome ${user}! you have logged in Successfully!`)
+  return redirect('/')
 }
 
 

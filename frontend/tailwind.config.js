@@ -18,7 +18,8 @@ export default {
         },
         secondary: {
           DEFAULT: '#6E62E5',
-          light: '#e1defe'
+          light: '#bfb8ff',
+          lightest: '#e1defe'
         },
         accent: {
           DEFAULT: '#23C35E',
