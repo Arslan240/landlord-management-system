@@ -27,7 +27,7 @@ app.use(notFoundMiddleware)
 const PORT = 4000
 const start = async () => {
   try {
-    const result = await connect()
+    const result = await connect(process.env.MONGO_URI)
     app.listen(4000, () => {
       console.log("server is listening at 4000")
     })
