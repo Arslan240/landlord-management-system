@@ -6,19 +6,21 @@ import HomeLayout from './components/HomeLayout';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Error from './pages/Error';
+import EmailVerification from './pages/EmailVerification';
+import VerifyEmail from './pages/VerifyEmail';
 
 // actions
 import { action as registerAction } from './pages/Register'
 import { action as loginAction } from './pages/Login'
-import Error from './pages/Error';
-import EmailVerification from './pages/EmailVerification';
+import { action as verifyAction } from './pages/VerifyEmail'
 
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <HomeLayout />,
-    errorElement: <Error/>,
+    errorElement: <Error />,
     children: [
       {
         index: true,
@@ -43,6 +45,12 @@ const router = createBrowserRouter([
     element: <EmailVerification />,
     errorElement: <Error />
   },
+  {
+    path: '/verify-email',
+    element: <VerifyEmail />,
+    action: verifyAction,
+    errorElement: <Error />
+  }
 
 ])
 

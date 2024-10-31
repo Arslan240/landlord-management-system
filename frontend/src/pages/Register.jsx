@@ -4,23 +4,24 @@ import HomeIcon from '../components/HomeIcon'
 import SubmitBtn from "../components/SubmitBtn"
 import CentreTemplate from "./CentreTemplate"
 import { customFetch } from "../utils/customFetch"
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 
 export const action = async ({ request }) => {
   const formData = Object.fromEntries(await request.formData())
-  
+
   try {
     const resp = await customFetch.post('/auth/register', formData)
-    console.log(resp.status);
-    // const {user} = data.user
-    // toast.success(`${user} You\'ve been registered successfully`)
+    console.log(resp);
+    const { name, email } = resp?.data?.user
+    toast.success(`${name} You\'ve been registered successfully. A verification email has been sent to your email ${email}`)
     return redirect('/email-verification')
   } catch (error) {
-    const errorMessage = error?.response?.data || error?.response?.statusText || 'Something Went Wrong'
+    console.log(error.message);
+    const errorMessage = error?.response?.data || error?.response?.statusText || error.message || 'Something Went Wrong'
     toast.error(errorMessage)
     return null
   }
-  
+
 }
 
 const Register = () => {

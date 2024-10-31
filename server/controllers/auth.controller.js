@@ -41,11 +41,15 @@ const registerController = async (req, res) => {
   // send an email to users mail with verification token in it which you get and verify against user and then set the user as verified.
   await sendVerificationEmail({ email, verificationToken })
 
-  res.send({ user })
+  res.send({
+    user: {
+      name, email, role
+    }
+  })
 }
 
 const verifyEmailController = async (req, res) => {
-  const { email, verificationToken } = req.query
+  const { email, verificationToken } = req.body
 
   // does user exists
   const user = await User.findOne({ email })
@@ -118,6 +122,8 @@ const loginController = async (req, res) => {
     refreshToken,
     user: user._id,
   })
+  
+  // { user: user.name, id: user._id, role: user.role,}
   const tokenUser = createTokenUser(user)
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
