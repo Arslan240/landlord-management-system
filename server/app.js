@@ -4,13 +4,23 @@ require("express-async-errors")
 const express = require("express")
 const { connect } = require("./db/connect")
 const app = express()
+const cors = require('cors')
+const cookieParser = require("cookie-parser")
+const morgan = require("morgan")
+
+
 
 // rouers
 const authRouter = require("./routes/auth.routes")
 const errorHandlerMiddleware = require("./middlewares/error-handler.middleware")
 const notFoundMiddleware = require("./middlewares/notFoundMiddleware")
-const cookieParser = require("cookie-parser")
 
+// middleware
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}))
+app.use(morgan('tiny'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser(process.env.PRIVATE_KEY))
