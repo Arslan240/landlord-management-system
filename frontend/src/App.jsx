@@ -8,14 +8,16 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 
 // actions
-import {action as registerAction} from './pages/Register'
-import {action as loginAction} from './pages/Login'
+import { action as registerAction } from './pages/Register'
+import { action as loginAction } from './pages/Login'
+import Error from './pages/Error';
 
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <HomeLayout />,
+    errorElement: <Error/>,
     children: [
       {
         index: true,
@@ -27,11 +29,13 @@ const router = createBrowserRouter([
     path: '/login',
     element: <Login />,
     action: loginAction,
+    errorElement: <Error />
   },
   {
     path: '/register',
     element: <Register />,
-    action: registerAction
+    action: registerAction,
+    errorElement: <Error />
   }
 ])
 
