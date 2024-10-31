@@ -16,7 +16,7 @@ router.post("/register", registerController)
 router.get("/logout", authMiddleware, logoutController)
 router.post("/login", loginController)
 // TODO,following three are just for time being it should be changed to POST request. and get request should be for frontend endpoint.
-router.get("/verify-email", verifyEmailController)
+router.post("/verify-email", verifyEmailController)
 router.get("/forgot-password", forgotPassword)
 router.get("/reset-password", resetPassword)
 
