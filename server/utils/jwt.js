@@ -13,7 +13,7 @@ const refreshAccessToken = async (refreshToken) => {
 }
 
 const attachCookiesToResponse = async ({ res, user, refreshToken }) => {
-  console.log("attaching cookies", res)
+  // console.log("attaching cookies", res)
   const access_tokenJWT = createJwt({ user })
   const refresh_tokenJWT = createJwt({ user, refreshToken })
 
