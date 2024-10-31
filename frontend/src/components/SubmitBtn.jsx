@@ -7,7 +7,7 @@ const SubmitBtn = ({ text }) => {
   return (
     <button
       type="submit"
-      className="btn my-4 btn-secondary btn-block"
+      className="btn my-4 btn-secondary btn-block disabled:bg-secondary-light"
       disabled={isSubmitting}
     >
       {
