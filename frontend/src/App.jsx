@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import { action as registerAction } from './pages/Register'
 import { action as loginAction } from './pages/Login'
 import Error from './pages/Error';
+import EmailVerification from './pages/EmailVerification';
 
 
 const router = createBrowserRouter([
@@ -36,7 +37,13 @@ const router = createBrowserRouter([
     element: <Register />,
     action: registerAction,
     errorElement: <Error />
-  }
+  },
+  {
+    path: '/email-verification',
+    element: <EmailVerification />,
+    errorElement: <Error />
+  },
+
 ])
 
 function App() {
