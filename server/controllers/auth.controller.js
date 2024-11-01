@@ -93,6 +93,7 @@ const loginController = async (req, res) => {
   const tokenUser = createTokenUser(user)
   // check email verification
   if (!user.isVerifed) {
+    console.log('user not verified');
     throw new UnAuthenticateError("Please verify your email", {
       user: {
         ...tokenUser,
@@ -133,7 +134,7 @@ const loginController = async (req, res) => {
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
 
-  res.status(StatusCodes.OK).json({ user: tokenUser, isVerifed: user.isVerifed })
+  res.status(StatusCodes.OK).json({ user: { ...tokenUser, isVerifed: user.isVerifed } })
 }
 
 const logoutController = async (req, res) => {
