@@ -93,9 +93,11 @@ const loginController = async (req, res) => {
   const tokenUser = createTokenUser(user)
   // check email verification
   if (!user.isVerifed) {
-    throw new UnAuthenticateError("Please verify your email",{
-      ...tokenUser,
-      isVerifed: user.isVerifed
+    throw new UnAuthenticateError("Please verify your email", {
+      user: {
+        ...tokenUser,
+        isVerifed: user.isVerifed
+      },
     })
   }
 
