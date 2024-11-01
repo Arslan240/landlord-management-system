@@ -133,7 +133,7 @@ const loginController = async (req, res) => {
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
 
-  res.status(StatusCodes.OK).json({ user: tokenUser })
+  res.status(StatusCodes.OK).json({ user: tokenUser, isVerifed: user.isVerifed })
 }
 
 const logoutController = async (req, res) => {
