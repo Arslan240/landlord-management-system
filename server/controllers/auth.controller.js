@@ -43,7 +43,7 @@ const registerController = async (req, res) => {
 
   res.send({
     user: {
-      name, email, role
+      name, email, role, isVerifed: user.isVerifed
     }
   })
 }
@@ -90,9 +90,13 @@ const loginController = async (req, res) => {
     throw new UnAuthenticateError("Invalid credentials")
   }
 
+  const tokenUser = createTokenUser(user)
   // check email verification
   if (!user.isVerifed) {
-    throw new UnAuthenticateError("Please verify your email")
+    throw new UnAuthenticateError("Please verify your email",{
+      ...tokenUser,
+      isVerifed: user.isVerifed
+    })
   }
 
   let refreshToken = ""
@@ -105,7 +109,6 @@ const loginController = async (req, res) => {
       throw new UnAuthenticateError("Invalid Authentication")
     }
     const { refreshToken } = existingToken
-    const tokenUser = createTokenUser(user)
 
     attachCookiesToResponse({ res, user: tokenUser, refreshToken })
     res.status(StatusCodes.OK).json({ user: tokenUser })
@@ -122,9 +125,9 @@ const loginController = async (req, res) => {
     refreshToken,
     user: user._id,
   })
-  
-  // { user: user.name, id: user._id, role: user.role,}
-  const tokenUser = createTokenUser(user)
+
+  // { name: user.name, id: user._id, role: user.role,}
+  // const tokenUser = createTokenUser(user)
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
 
