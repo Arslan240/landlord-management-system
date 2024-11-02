@@ -3,8 +3,10 @@ import FormInput from "../components/FormInput"
 import HomeIcon from '../components/HomeIcon'
 import SubmitBtn from "../components/SubmitBtn"
 import CentreTemplate from "./CentreTemplate"
-import { customFetch } from "../utils/customFetch"
+import { customFetch } from "../utils"
 import { toast } from 'react-toastify'
+import { store } from "../redux/store"
+import { register } from "../redux/userSlice"
 
 export const action = async ({ request }) => {
   const formData = Object.fromEntries(await request.formData())
@@ -12,13 +14,21 @@ export const action = async ({ request }) => {
   try {
     const resp = await customFetch.post('/auth/register', formData)
     console.log(resp);
-    const { name, email } = resp?.data?.user
+    
+    const user = resp?.data?.user
+    const { name, email } = user
+
     toast.success(`${name} You\'ve been registered successfully. A verification email has been sent to your email ${email}`)
+    
+    store.dispatch(register(user))
+    
     return redirect('/email-verification')
   } catch (error) {
     console.log(error.message);
     const errorMessage = error?.response?.data || error?.response?.statusText || error.message || 'Something Went Wrong'
+    
     toast.error(errorMessage)
+    
     return null
   }
 
