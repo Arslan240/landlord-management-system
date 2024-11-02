@@ -14,6 +14,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import { action as registerAction } from './pages/Register'
 import { action as loginAction } from './pages/Login'
 import { action as verifyAction } from './pages/VerifyEmail'
+import { store } from './redux/store';
 
 
 const router = createBrowserRouter([
@@ -38,7 +39,7 @@ const router = createBrowserRouter([
     path: '/register',
     element: <Register />,
     action: registerAction,
-    errorElement: <Error />
+    errorElement: <Error />,
   },
   {
     path: '/email-verification',
