@@ -114,7 +114,7 @@ const loginController = async (req, res) => {
     const { refreshToken } = existingToken
 
     attachCookiesToResponse({ res, user: tokenUser, refreshToken })
-    res.status(StatusCodes.OK).json({ user: tokenUser })
+    res.status(StatusCodes.OK).json({ user: { ...tokenUser, isVerifed: user.isVerifed } })
     return
   }
   // if token doesn't exist
@@ -133,7 +133,7 @@ const loginController = async (req, res) => {
   // const tokenUser = createTokenUser(user)
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
-
+  console.log({ user: { ...tokenUser, isVerifed: user.isVerifed } });
   res.status(StatusCodes.OK).json({ user: { ...tokenUser, isVerifed: user.isVerifed } })
 }
 
