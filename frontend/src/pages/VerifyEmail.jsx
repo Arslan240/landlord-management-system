@@ -2,7 +2,7 @@ import { Form, redirect, useSearchParams } from "react-router-dom"
 import CentreTemplate from "./CentreTemplate"
 import SubmitBtn from "../components/SubmitBtn"
 import FormInput from "../components/FormInput"
-import { customFetch } from "../utils/customFetch"
+import { customFetch } from "../utils"
 import {toast} from 'react-toastify'
 
 
