@@ -43,7 +43,7 @@ const registerController = async (req, res) => {
 
   res.send({
     user: {
-      name, email, role, isVerifed: user.isVerifed
+      name, email, role, isVerified: user.isVerified
     }
   })
 }
@@ -62,7 +62,7 @@ const verifyEmailController = async (req, res) => {
   }
 
   user.verificationToken = ""
-  user.isVerifed = true
+  user.isVerified = true
   user.verifiedDate = Date.now()
   await user.save()
 
@@ -92,12 +92,12 @@ const loginController = async (req, res) => {
 
   const tokenUser = createTokenUser(user)
   // check email verification
-  if (!user.isVerifed) {
+  if (!user.isVerified) {
     console.log('user not verified');
     throw new UnAuthenticateError("Please verify your email", {
       user: {
         ...tokenUser,
-        isVerifed: user.isVerifed
+        isVerified: user.isVerified
       },
     })
   }
@@ -114,7 +114,7 @@ const loginController = async (req, res) => {
     const { refreshToken } = existingToken
 
     attachCookiesToResponse({ res, user: tokenUser, refreshToken })
-    res.status(StatusCodes.OK).json({ user: { ...tokenUser, isVerifed: user.isVerifed } })
+    res.status(StatusCodes.OK).json({ user: { ...tokenUser, isVerified: user.isVerified } })
     return
   }
   // if token doesn't exist
@@ -133,8 +133,8 @@ const loginController = async (req, res) => {
   // const tokenUser = createTokenUser(user)
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
-  console.log({ user: { ...tokenUser, isVerifed: user.isVerifed } });
-  res.status(StatusCodes.OK).json({ user: { ...tokenUser, isVerifed: user.isVerifed } })
+  console.log({ user: { ...tokenUser, isVerified: user.isVerified } });
+  res.status(StatusCodes.OK).json({ user: { ...tokenUser, isVerified: user.isVerified } })
 }
 
 const logoutController = async (req, res) => {
