@@ -23,10 +23,12 @@ const router = createBrowserRouter([
     element: <HomeLayout />,
     errorElement: <Error />,
     children: [
+      // here use requireAuth component, and if multiple components then put them in children array.
       {
         index: true,
-        element: <Landing />
+        element: <Landing /> // protected route, only logged in user can login. in future also implement role base access
       },
+      // here put those components which don't need auth
     ]
   },
   {
