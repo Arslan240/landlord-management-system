@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       // here use requireAuth component, and if multiple components then put them in children array.
       {
         index: true,
-        element: <Landing /> // protected route, only logged in user can login. in future also implement role base access
+        element: <Landing />
       },
       // here put those components which don't need auth
     ]
