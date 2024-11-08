@@ -20,7 +20,7 @@ export const action = async ({ request }) => {
     
     toast.success(`Welcome ${user?.name}! you have logged in Successfully!`)
     store.dispatch(login(user))
-    return redirect('/')
+    return redirect('/dashboard')
   } catch (error) {
     console.log(error);
     const errorMessage = error?.response?.data?.msg || error?.response?.statusText || error.message || 'Something Went Wrong'
