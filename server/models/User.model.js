@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs")
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
-    reqiured: [true, "Please provide your name"],
+    required: [true, "Please provide your name"],
     minlength: 5,
     maxlength: 15,
   },
@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: [String],
     enum: ["admin", "landlord", "tenant"], //user is both landlord and tenant based on his acivity.
-    default: "user",
+    default: ["user"],
   },
   password: {
     type: String,
