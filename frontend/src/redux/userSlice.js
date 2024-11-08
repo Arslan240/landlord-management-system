@@ -1,7 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 import { getItemFromLocalStorage } from '../utils';
+import {useSelector} from 'react-redux'
 
+// returned from server / saved in local storage
+// const user = {
+//   name,
+//   id,
+//   role,
+//   isVerified: true/false
+// }
 
 const userString = 'user'
 
@@ -33,5 +41,7 @@ const userSlice = createSlice({
 })
 
 export const { login, logout,register } = userSlice.actions
+
+export const useUserState = () => useSelector(state => state.userState.user)
 
 export default userSlice.reducer
