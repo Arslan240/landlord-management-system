@@ -15,6 +15,7 @@ import { action as registerAction } from './pages/Register'
 import { action as loginAction } from './pages/Login'
 import { action as verifyAction } from './pages/VerifyEmail'
 import { store } from './redux/store';
+import Dashboard from './pages/Dashboard';
 
 
 const router = createBrowserRouter([
@@ -23,12 +24,14 @@ const router = createBrowserRouter([
     element: <HomeLayout />,
     errorElement: <Error />,
     children: [
-      // here use requireAuth component, and if multiple components then put them in children array.
       {
         index: true,
         element: <Landing />
       },
-      // here put those components which don't need auth
+      {
+        path: 'dashboard',
+        element: <Dashboard />
+      }
     ]
   },
   {
