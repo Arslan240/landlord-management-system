@@ -21,7 +21,7 @@ export const action = async ({ request }) => {
     toast.success(msg)
     return redirect('/login')
   } catch (error) {
-    const errorMessage = error?.response?.data || error?.response?.statusText || 'Something Went Wrong'
+    const errorMessage = error?.response?.data?.msg || error?.response?.statusText || error.message || 'Something Went Wrong'
     toast.error(errorMessage)
     return null
   }

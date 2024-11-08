@@ -12,7 +12,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     })
   }
 
-  return res.status(statusCode || 500).send(message)
+  return res.status(statusCode || 500).send({msg:message})
 }
 
 module.exports = errorHandlerMiddleware

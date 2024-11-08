@@ -25,7 +25,7 @@ export const action = async ({ request }) => {
     return redirect('/email-verification')
   } catch (error) {
     console.log(error.message);
-    const errorMessage = error?.response?.data || error?.response?.statusText || error.message || 'Something Went Wrong'
+    const errorMessage = error?.response?.data?.msg || error?.response?.statusText || error.message || 'Something Went Wrong'
     
     toast.error(errorMessage)
     

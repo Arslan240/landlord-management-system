@@ -23,7 +23,7 @@ export const action = async ({ request }) => {
     return redirect('/')
   } catch (error) {
     console.log(error);
-    const errorMessage = error?.response?.data || error?.response?.statusText || 'Something Went Wrong'
+    const errorMessage = error?.response?.data?.msg || error?.response?.statusText || error.message || 'Something Went Wrong'
     if (errorMessage === 'Please verify your email') {
       toast.warn(`Please verify your email. Check your email ${formData.email}`)
       return redirect('/email-verification')
