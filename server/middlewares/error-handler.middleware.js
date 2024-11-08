@@ -6,13 +6,13 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   
   // this counts on that there is only one error like this
   if (message === 'Please verify your email'){ // same message in login controller
-    res.status(statusCode || 500).json({
+    return res.status(statusCode || 500).json({
       msg: message,
       user: data
     })
   }
 
-  res.status(statusCode || 500).send(message)
+  return res.status(statusCode || 500).send(message)
 }
 
 module.exports = errorHandlerMiddleware
