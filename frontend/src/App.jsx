@@ -16,6 +16,7 @@ import { action as loginAction } from './pages/Login'
 import { action as verifyAction } from './pages/VerifyEmail'
 import { store } from './redux/store';
 import Dashboard from './pages/Dashboard';
+import Properties from './pages/Properties';
 
 
 const router = createBrowserRouter([
@@ -30,7 +31,13 @@ const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <Dashboard />
+        element: <Dashboard />,
+        children: [
+          {
+            path: 'properties',
+            element: <Properties />
+          }
+        ]
       }
     ]
   },
