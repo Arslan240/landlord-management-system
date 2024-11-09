@@ -11,3 +11,12 @@ body {
   color: rgb(44, 44, 44);
 }
 
+@layer components{
+  .padding{
+    @apply px-5
+  }
+
+  .dashboard-outlet{
+    @apply py-5
+  }
+}
