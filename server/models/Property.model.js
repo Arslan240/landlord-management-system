@@ -19,6 +19,7 @@ const PropertySchema = new mongoose.Schema({
   available: {
     type: Boolean,
     default: true,
+    required: [true, 'Please provide available value']
   },
   renter: {
     type: mongoose.Types.ObjectId,
