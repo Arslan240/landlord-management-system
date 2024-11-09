@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: [String],
-    enum: ["admin", "landlord", "tenant"], //user is both landlord and tenant based on his acivity.
+    enum: ["admin", "landlord", "tenant","user"], //user is both landlord and tenant based on his acivity.
     default: ["user"],
   },
   password: {
