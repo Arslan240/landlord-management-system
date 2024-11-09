@@ -38,6 +38,11 @@ const PropertySchema = new mongoose.Schema({
     state: { type: String, required: true },
     postalCode: { type: String, required: true }
   },
+  category: {
+    type: String,
+    enum: ['Single Family House', 'Duplex'],
+    default: 'Single Family House'
+  }
   // rentHistory: {} , // a separate model
   // ratings:{}, //setup new model for ratings with stars and comments
 }, { timestamps: true })
