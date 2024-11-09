@@ -8,7 +8,7 @@ import Profile from "./Profile"
 
 const Header = () => {
   return (
-    <nav className="navbar bg-indigo-50 p-4 max-h-10">
+    <nav className="navbar bg-indigo-50 padding max-h-10">
       <div className="flex justify-between  w-full">
         <Search placeholder={'Enter search term'} />
         <div className="flex gap-4 ">
