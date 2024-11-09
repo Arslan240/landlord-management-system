@@ -17,6 +17,6 @@ body {
   }
 
   .dashboard-outlet{
-    @apply py-5
+    @apply pb-5 pt-3
   }
 }
