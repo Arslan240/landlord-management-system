@@ -1,17 +1,30 @@
 const { StatusCodes } = require("http-status-codes")
 const Property = require("../models/Property.model")
-const { BadRequestError } = require("../errors")
+const { BadRequestError, UnAuthenticateError, UnAuthorizedError } = require("../errors")
 const { User } = require("../models/User.model")
 
 const getAllProperties = async (req, res) => {
-  const properties = await Property.find({})
+  const { id: userId } = req.user
+
+  // double check if user exists or not
+  const user = await User.findById(userId)
+  if(!user){
+    throw new UnAuthorizedError('You\'re not authorized access this resource')
+  }
+
+  const properties = await Property.find({
+    owner: userId
+  })
 
   res.status(StatusCodes.OK).json({ data: properties })
 }
 
 const addProperty = async (req, res) => {
   const data = req.body
-  const { owner, address, details, ...rest } = data
+  const { id: owner } = req.user
+  const { address, details, ...rest } = data
+
+  console.log(req.user);
 
   if (!owner) {
     throw new BadRequestError('Please provide owner')
