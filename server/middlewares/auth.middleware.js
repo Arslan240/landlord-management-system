@@ -1,4 +1,4 @@
-const { UnAuthenticateError } = require("../errors")
+const { UnAuthenticateError, UnAuthorizedError } = require("../errors")
 const { Token } = require("../models/Token.model")
 const {
   verifyToken,
@@ -46,6 +46,15 @@ const authMiddleware = async (req, res, next) => {
   }
 }
 
+const rolesAuthMiddleware = (...roles) => async (req, res, next) => {
+  // some checks if any one item returns true, then some will return true as well.
+  if (!req.user || !Array.isArray(req.user.role) || !req.user.role.some(role => roles.includes(role))) {
+    throw new UnAuthorizedError('You don\'t have permission to access this route')
+  }
+  next()
+}
+
 module.exports = {
   authMiddleware,
+  rolesAuthMiddleware
 }
