@@ -3,15 +3,6 @@ const { User } = require('./User.model')
 const { PropertyDetailsSchema } = require('./PropertyDetailsSchema.model')
 
 /**
- * add property
- * delete property
- * update property
- * get property
- * get properties
- * Filters in get property e.g. sort by date, renter id, 
- */
-
-/**
  * sqft
  * bathrooms
  * bedrooms
