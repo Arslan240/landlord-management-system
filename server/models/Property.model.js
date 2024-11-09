@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const { User } = require('./User.model')
+const { PropertyDetailsSchema } = require('./PropertyDetailsSchema.model')
 
 /**
  * add property
@@ -10,7 +11,14 @@ const { User } = require('./User.model')
  * Filters in get property e.g. sort by date, renter id, 
  */
 
+/**
+ * sqft
+ * bathrooms
+ * bedrooms
+ */
+
 const PropertySchema = new mongoose.Schema({
+  name: String,
   owner: {
     type: mongoose.Types.ObjectId,
     ref: User,
@@ -24,17 +32,34 @@ const PropertySchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: User
   },
-  rent: {
-    type: Number,
-    default: 500
-  },
   ownerHistory: {
     type: [mongoose.Types.ObjectId],
     default: []
   },
+  details: {
+    type: PropertyDetailsSchema,
+    required: true
+  },
+  address: {
+    plotNo: { type: Number, required: true },
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    postalCode: { type: String, required: true }
+  },
   // rentHistory: {} , // a separate model
   // ratings:{}, //setup new model for ratings with stars and comments
 }, { timestamps: true })
+
+// indexes
+PropertySchema.index({
+  'address.plotNo': 1,
+  'address.street': 1,
+  'address.city': 1,
+  'address.state': 1,
+  'address.postalCode': 1
+}, { unique: true })
+
 
 PropertySchema.pre('save', async function (next) {
   if (!this.isModified('owner')) return
