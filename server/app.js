@@ -12,6 +12,7 @@ const morgan = require("morgan")
 
 // rouers
 const authRouter = require("./routes/auth.routes")
+const propertyRouter = require('./routes/property.routes')
 const errorHandlerMiddleware = require("./middlewares/error-handler.middleware")
 const notFoundMiddleware = require("./middlewares/notFoundMiddleware")
 
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser(process.env.PRIVATE_KEY))
 
 app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/properties", propertyRouter)
 
 // app.use("/", (req, res) => {
 //   res.send("<h2>Hello</h2>")
