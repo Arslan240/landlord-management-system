@@ -1,6 +1,7 @@
 import { MoreVertical, ChevronsLeft, ChevronsRight } from "lucide-react"
 import { useContext, createContext, useState } from "react"
 import HomeIcon from "./HomeIcon"
+import { Link } from "react-router-dom"
 
 const SidebarContext = createContext()
 
@@ -11,13 +12,13 @@ export default function Sidebar({ children }) {
     <aside className="h-screen">
       <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className={`p-4 pb-2 flex justify-between transition-all items-center`}>
-          <HomeIcon size={35} />
+          <HomeIcon size={35} classNames={!expanded && 'w-0'} />
           {/* <img
-            src="https://img.logoipsum.com/243.svg"
-            className={`overflow-hidden transition-all ${expanded ? "w-32" : "w-0"
-              }`}
-            alt=""
-          /> */}
+              src="https://img.logoipsum.com/243.svg"
+              className={`overflow-hidden transition-all ${expanded ? "w-32" : "w-0"
+                }`}
+              alt=""
+            /> */}
           <button
             onClick={() => setExpanded((curr) => !curr)}
             className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
@@ -46,7 +47,9 @@ export default function Sidebar({ children }) {
               <h4 className="font-semibold">John Doe</h4>
               <span className="text-xs text-gray-600">johndoe@gmail.com</span>
             </div>
-            <MoreVertical size={20} />
+            <div className="hover:bg-primary-hover rounded-full p-2 cursor-pointer">
+              <MoreVertical size={20} />
+            </div>
           </div>
         </div>
       </nav>
@@ -54,11 +57,12 @@ export default function Sidebar({ children }) {
   )
 }
 
-export function SidebarItem({ icon, text, active, alert }) {
+export function SidebarItem({ icon, text, active, alert, to }) {
   const { expanded } = useContext(SidebarContext)
 
   return (
-    <li
+    <Link
+      to={to}
       className={`
         relative flex items-center py-2 px-3 my-1
         font-medium rounded-md cursor-pointer
@@ -71,7 +75,7 @@ export function SidebarItem({ icon, text, active, alert }) {
     >
       {icon}
       <span
-        className={`overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"
+        className={`text-sm overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"
           }`}
       >
         {text}
@@ -95,6 +99,6 @@ export function SidebarItem({ icon, text, active, alert }) {
           {text}
         </div>
       )}
-    </li>
+    </Link>
   )
 }
