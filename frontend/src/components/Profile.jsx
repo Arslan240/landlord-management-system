@@ -2,12 +2,8 @@ import { Link } from "react-router-dom"
 
 const Profile = ({ size = 35 }) => {
   return (
-    <div className="hover:bg-primary-hover rounded-full flex items-center dropdown dropdown-end pr-2
-    
-    "
-      tabIndex={0} role="button"
-    >
-      <div div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar" >
+    <div className="hover:bg-primary-hover rounded-full flex items-center dropdown dropdown-end pr-2" tabIndex={0} role="button">
+      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar" >
         <div className="w-9 rounded-full">
           <img
             alt="Tailwind CSS Navbar component"
