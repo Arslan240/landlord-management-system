@@ -11,13 +11,12 @@ const { model } = require("mongoose")
 const { authMiddleware } = require("../middlewares/auth.middleware")
 const router = express.Router()
 
+// Auth Routes
 router.post("/register", registerController)
-
 router.get("/logout", authMiddleware, logoutController)
 router.post("/login", loginController)
-// TODO,following three are just for time being it should be changed to POST request. and get request should be for frontend endpoint.
 router.post("/verify-email", verifyEmailController)
-router.get("/forgot-password", forgotPassword)
-router.get("/reset-password", resetPassword)
+router.post("/forgot-password", forgotPassword)
+router.post("/reset-password", resetPassword)
 
 module.exports = router
