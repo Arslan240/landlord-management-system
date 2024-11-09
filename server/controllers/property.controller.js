@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes")
 const Property = require("../models/Property.model")
-const { BadRequestError, UnAuthenticateError, UnAuthorizedError } = require("../errors")
+const { BadRequestError, UnAuthorizedError, NotFoundError } = require("../errors")
 const { User } = require("../models/User.model")
 
 const getAllProperties = async (req, res) => {
@@ -17,6 +17,24 @@ const getAllProperties = async (req, res) => {
   })
 
   res.status(StatusCodes.OK).json({ data: properties })
+}
+
+const getSingleProperty = async (req,res) => {
+  const {id:propertyId} = req.params
+  const {id: owner} = req.user
+
+  if(!propertyId) {
+    return res.status(StatusCodes.OK).json({data: []})
+  }
+
+  const property = await Property.findOne({_id: propertyId, owner})
+  if(!property){
+    throw new NotFoundError('Property not found')
+  }
+
+  res.status(StatusCodes.OK).json({
+    data: property
+  })
 }
 
 const addProperty = async (req, res) => {
@@ -69,6 +87,7 @@ const addProperty = async (req, res) => {
 
 module.exports = {
   getAllProperties,
+  getSingleProperty,
   addProperty
 }
 
