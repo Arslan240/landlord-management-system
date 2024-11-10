@@ -19,6 +19,10 @@ const Breadcrumbs = () => {
   })
   console.log(crumbs);
 
+  if (crumbs.length === 1) {
+    return <></>
+  }
+
   return (
     <div className="padding pt-4 flex text-primary text-xs">
       {crumbs}
