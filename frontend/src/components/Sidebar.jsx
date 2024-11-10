@@ -2,11 +2,11 @@ import { MoreVertical, ChevronsLeft, ChevronsRight } from "lucide-react"
 import { useContext, createContext, useState } from "react"
 import HomeIcon from "./HomeIcon"
 import { Link } from "react-router-dom"
+import { useSidebarContext } from "../pages/Dashboard"
 
-const SidebarContext = createContext()
 
 export default function Sidebar({ children }) {
-  const [expanded, setExpanded] = useState(true)
+  const {expanded, setExpanded} = useSidebarContext()
 
   return (
     <aside className="h-screen">
@@ -27,9 +27,7 @@ export default function Sidebar({ children }) {
           </button>
         </div>
 
-        <SidebarContext.Provider value={{ expanded }}>
-          <ul className="flex-1 px-3">{children}</ul>
-        </SidebarContext.Provider>
+        <ul className="flex-1 px-3">{children}</ul>
 
         <div className="border-t flex p-3">
           <img
@@ -58,7 +56,7 @@ export default function Sidebar({ children }) {
 }
 
 export function SidebarItem({ icon, text, active, alert, to }) {
-  const { expanded } = useContext(SidebarContext)
+  const { expanded } = useSidebarContext()
 
   return (
     <Link
