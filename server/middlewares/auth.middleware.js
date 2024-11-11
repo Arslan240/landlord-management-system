@@ -28,7 +28,11 @@ const authMiddleware = async (req, res, next) => {
       refreshToken,
     })
     if (!existingToken || !existingToken?.isValid) {
-      console.log("existing refresh token either absent or invalid")
+      if (!existingToken?.isValid){
+        console.log('existing token is not valied');
+      }else{
+        console.log("existing refresh token either absent or invalid")
+      }
       console.log(existingToken)
       throw new UnAuthenticateError("Invalid Authentication")
     }
