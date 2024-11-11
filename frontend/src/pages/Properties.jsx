@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useRef, useState } from "react"
 import Search from "../components/Search"
 import Filters from "../components/Filters"
 import { useQuery } from "@tanstack/react-query"
@@ -30,6 +30,8 @@ const filterConfig = [{
 
 const Properties = () => {
   const [searchTerm, setSearchTerm] = useState("")
+  const searchRef = useRef()
+  console.log(searchRef.current && searchRef.current.value);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value)
@@ -44,7 +46,7 @@ const Properties = () => {
     queryFn: async () => {
       const { data } = await customFetch('properties')
       return data.data
-    },
+    }
   })
 
   // updating properties in redux
@@ -60,19 +62,19 @@ const Properties = () => {
 
   return (
     <PropertiesContext.Provider value={{ setSearchTerm, filterConfig }}>
-      <section>
+      <section className="pb-5">
         <h1 className="capitalize text-3xl font-semibold">properties</h1>
         {/* search and filters */}
         <div className="flex flex-col md:flex-row justify-between py-3">
           <div>
-            <Search placeholder={'Search properties'} changeHandler={handleSearch} />
+            <Search placeholder={'Search properties'} changeHandler={handleSearch} ref={searchRef} />
           </div>
           <Filters />
         </div>
         {/* <p>hello</p> */}
         {isFetching && <Loading />}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {!isFetching && properties && properties.map(item => <Property key={item._id} />)}
+          {!isFetching && properties && properties.map(item => <Property key={item._id} {...item} />)}
         </section>
       </section>
     </PropertiesContext.Provider>
