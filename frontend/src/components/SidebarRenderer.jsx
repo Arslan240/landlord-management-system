@@ -11,7 +11,7 @@ const SidebarRenderer = () => {
       icon: <LayoutGrid size={iconSize} />,
       text: 'Dashboard',
       to: '/dashboard',
-      active: location.pathname === '/dashboard',
+      active: location.pathname === '/dashboard' || location.pathname === '/dashboard/',
       alert: false
     },
     {
