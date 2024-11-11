@@ -2,6 +2,8 @@
 import 'preline'; // Import to ensure JS behaviors work
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import HomeLayout from './components/HomeLayout';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
@@ -18,6 +20,11 @@ import { store } from './redux/store';
 import Dashboard from './pages/Dashboard';
 import Properties from './pages/Properties';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {}
+  }
+})
 
 const router = createBrowserRouter([
   {
@@ -69,7 +76,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   );
 }
 
