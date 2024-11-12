@@ -29,10 +29,10 @@ const propertySlice = createSlice({
       let newFilters = {}
 
       Object.keys(serverFilters).forEach((key) => {
-        const { name, ...rest } = serverFilters[key]
-        newFilters[name] = {
+        const singleFilter = serverFilters[key]
+        newFilters[singleFilter.name] = {
           selectedValue: "",
-          ...rest,
+          ...singleFilter,
         }
       })
       console.log(serverFilters)
