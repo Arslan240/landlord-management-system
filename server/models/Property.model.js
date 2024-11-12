@@ -42,6 +42,10 @@ const PropertySchema = new mongoose.Schema({
     type: String,
     enum: ['Single Family House', 'Duplex'],
     default: 'Single Family House'
+  },
+  images: {
+    type: [String],
+    default: ['https://photos.zillowstatic.com/fp/c1dc9043991fb7e87daf3d69287569a3-p_e.webp']
   }
   // rentHistory: {} , // a separate model
   // ratings:{}, //setup new model for ratings with stars and comments
