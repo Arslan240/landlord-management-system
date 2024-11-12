@@ -6,11 +6,11 @@ const PropertyDetailsSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Please provide the square footage of the property']
   },
-  bedrooms: {
+  beds: {
     type: Number,
     required: [true, 'Please provide the number of bedrooms']
   },
-  bathrooms: {
+  baths: {
     type: Number,
     required: [true, 'Please provide the number of bathrooms']
   },
@@ -39,4 +39,4 @@ const PropertyDetailsSchema = new mongoose.Schema({
   }
 });
 
-module.exports = {PropertyDetailsSchema}
+module.exports = { PropertyDetailsSchema }
