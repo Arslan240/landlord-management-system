@@ -1,10 +1,6 @@
 const { StatusCodes } = require("http-status-codes")
 const Property = require("../models/Property.model")
-const {
-  BadRequestError,
-  UnAuthorizedError,
-  NotFoundError,
-} = require("../errors")
+const { BadRequestError, UnAuthorizedError, NotFoundError } = require("../errors")
 const { User } = require("../models/User.model")
 
 const getAllProperties = async (req, res) => {
@@ -214,11 +210,11 @@ const generatePropertiesFilters = async () => {
   ])
 
   return {
-    rentRange: { min: rentRange?.min, max: rentRange?.max },
-    sqftRange: { min: sqftRange?.min, max: sqftRange?.max },
-    bedsRange: { min: bedsRange?.min, max: bedsRange?.max },
-    bathsRange: { min: bathsRange?.min, max: bathsRange?.max },
-    yearBuiltRange: { min: yearBuiltRange?.min, max: yearBuiltRange?.max },
-    garageRange: { min: garageRange?.min, max: garageRange?.max },
+    rentRange: { name: "rent", min: rentRange?.min, max: rentRange?.max },
+    sqftRange: { name: "sqft", min: sqftRange?.min, max: sqftRange?.max },
+    bedsRange: { name: "beds", min: bedsRange?.min, max: bedsRange?.max },
+    bathsRange: { name: "baths", min: bathsRange?.min, max: bathsRange?.max },
+    yearBuiltRange: { name: "year", min: yearBuiltRange?.min, max: yearBuiltRange?.max },
+    garageRange: { name: "garages", min: garageRange?.min, max: garageRange?.max },
   }
 }
