@@ -22,7 +22,7 @@ const Property = ({ details, _id, address, available, images }) => {
             alt="Shoes"
           /> */}
         <Carousel >
-          {slides.map((src, index) => <img src={src} />)}
+          {slides.map((src, index) => <img src={src} key={src} />)}
         </Carousel>
         {available && <div className="badge ml-auto text-xs bg-green-600 text-white absolute right-3 top-4 shadow-2xl border-none">available</div>}
       </figure>
@@ -49,7 +49,7 @@ const Property = ({ details, _id, address, available, images }) => {
           </p>
         </div>
         <div className="flex card-actions">
-          <Link to={`${location.pathname}/${_id}`} className="ml-auto text-secondary hover:underline">
+          <Link to={`${location.pathname}/${_id}`} className="items-start sm:ml-auto text-secondary hover:underline">
             Details
           </Link>
         </div>
