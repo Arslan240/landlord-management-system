@@ -11,10 +11,11 @@ const SidebarContext = createContext()
 
 export const useSidebarContext = () => useContext(SidebarContext)
 
+// use these breakpoints to set classnames manually in useEffect.
 const Dashboard = ({ children }) => {
   const [expanded, setExpanded] = useState(true)
   const navigation = useNavigation()
-  const isLoading = navigation.state === 'loading'
+  const isLoading = navigation.state === "loading"
   const outletRef = useRef()
 
   return (
@@ -27,17 +28,19 @@ const Dashboard = ({ children }) => {
         <div className="flex flex-col w-full bg-primary-backg ">
           <Header />
           <Breadcrumbs />
-          {
-            isLoading ? <Loading /> : (
-              <main className={`flex-grow padding dashboard-outlet transition-all delay-[50] text-sm  
-                ${expanded && 'w-full'} 
-                md:${expanded ? 'w-full' : 'w-[85%]'} lg:${expanded ? 'w-full' : 'w-[85%]'} xl:${expanded ? 'w-full' : 'w-[85%]'} 3xl:w-[75%] mx-auto overflow-y-auto `
-              }
-              >
-                <Outlet />
-              </main>
-            )
-          }
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <main
+              className={`flex-grow padding dashboard-outlet transition-all delay-[50] text-sm w-full  
+                ${expanded && "w-full"} sm:w-[85%] 
+                md:${expanded ? "w-full" : "w-[85%]"} lg:${expanded ? "w-full" : "w-[85%]"} xl:${
+                expanded ? "w-full" : "w-[85%]"
+              } 3xl:w-[75%] mx-auto overflow-y-auto max-w-[85rem]`}
+            >
+              <Outlet />
+            </main>
+          )}
         </div>
       </div>
     </>
