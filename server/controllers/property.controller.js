@@ -4,31 +4,48 @@ const { BadRequestError, UnAuthorizedError, NotFoundError } = require("../errors
 const { User } = require("../models/User.model")
 
 const getAllProperties = async (req, res) => {
-  const { id: userId } = req.user
+  const userId = req.user.id
+
+  const { search: searchTerm } = req.query
+
+  // when there is a search term from search box, its for this. only searches across text based details.
+  const query = {
+    $or: [
+      { "address.city": { $regex: searchTerm, $options: "i" } },
+      { "address.state": { $regex: searchTerm, $options: "i" } },
+      { "address.postalCode": { $regex: searchTerm, $options: "i" } },
+      { "address.street": { $regex: searchTerm, $options: "i" } },
+      { category: { $regex: searchTerm, $options: "i" } },
+    ]
+  };
+
+
+
+  console.log(searchTerm);
 
   // double check if user exists or not
   const user = await User.findById(userId)
-  if(!user){
+  if (!user) {
     throw new UnAuthorizedError('You\'re not authorized access this resource')
   }
 
   const properties = await Property.find({
-    owner: userId
+    owner: userId, ...query
   })
 
   res.status(StatusCodes.OK).json({ data: properties })
 }
 
-const getSingleProperty = async (req,res) => {
-  const {id:propertyId} = req.params
-  const {id: owner} = req.user
+const getSingleProperty = async (req, res) => {
+  const { id: propertyId } = req.params
+  const { id: owner } = req.user
 
-  if(!propertyId) {
-    return res.status(StatusCodes.OK).json({data: []})
+  if (!propertyId) {
+    return res.status(StatusCodes.OK).json({ data: [] })
   }
 
-  const property = await Property.findOne({_id: propertyId, owner})
-  if(!property){
+  const property = await Property.findOne({ _id: propertyId, owner })
+  if (!property) {
     throw new NotFoundError('Property not found')
   }
 
