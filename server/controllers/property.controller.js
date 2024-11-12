@@ -210,11 +210,11 @@ const generatePropertiesFilters = async () => {
   ])
 
   return {
-    rentRange: { name: "rent", min: rentRange?.min, max: rentRange?.max },
-    sqftRange: { name: "sqft", min: sqftRange?.min, max: sqftRange?.max },
-    bedsRange: { name: "beds", min: bedsRange?.min, max: bedsRange?.max },
-    bathsRange: { name: "baths", min: bathsRange?.min, max: bathsRange?.max },
-    yearBuiltRange: { name: "year", min: yearBuiltRange?.min, max: yearBuiltRange?.max },
-    garageRange: { name: "garages", min: garageRange?.min, max: garageRange?.max },
+    rentRange: { index: 0, name: "rent", min: rentRange?.min, max: rentRange?.max },
+    sqftRange: { index: 1, name: "sqft", min: sqftRange?.min, max: sqftRange?.max },
+    bedsRange: { index: 2, name: "beds", min: bedsRange?.min, max: bedsRange?.max },
+    bathsRange: { index: 3, name: "baths", min: bathsRange?.min, max: bathsRange?.max },
+    yearBuiltRange: { index: 4, name: "year", min: yearBuiltRange?.min, max: yearBuiltRange?.max },
+    garageRange: { index: 5, name: "garages", min: garageRange?.min, max: garageRange?.max },
   }
 }
