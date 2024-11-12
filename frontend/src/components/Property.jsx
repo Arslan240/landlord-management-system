@@ -15,7 +15,6 @@ const Property = ({ details, _id, address, available, images }) => {
   const { plotNo, street } = address
   const location = useLocation()
   return (
-    // <Link to={`${location.pathname}/${_id}`}>
     <div className="card card-compact bg-base-100 hover:shadow-xl hover:shadow-secondary-light transition-all delay-0 shadow-secondary-lightest shadow-lg max-w-[20rem]">
       <figure className="sm:max-w-72 max-h-52 relative">
         {/* <img
@@ -49,12 +48,16 @@ const Property = ({ details, _id, address, available, images }) => {
             <p className="font-semibold text-[.9rem]">sqft</p>
           </p>
         </div>
+        <div className="flex card-actions">
+          <Link to={`${location.pathname}/${_id}`} className="ml-auto text-secondary hover:underline">
+            Details
+          </Link>
+        </div>
         {/* <div className="card-actions justify-end">
           <button className="btn btn-secondary">Buy Now</button>
         </div> */}
       </div>
     </div>
-    // </Link>
 
   )
 }
