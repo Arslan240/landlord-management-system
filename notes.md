@@ -1,0 +1,2 @@
+- [] Don't use actions in login,register components OR in any components which updates auth State.
+- [] Because we can't access context in actions. So, you might be forced to use redux for auth state which might be an overkill.

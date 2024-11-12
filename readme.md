@@ -1,3 +1,34 @@
-- [] Create user slice in features/user/userSlice.js
-- [] get help from john smilga comfy store.
-- [] in setup auth context, which just checks value from local storage, if it's there and maybe we can check access and refresh tokens, if its there then user is logged in and can access protected routes. 
+- [x] Create user slice in features/user/userSlice.js
+- [x] get help from john smilga comfy store.
+- [x] Use redux for auth as well. Used a custom selector hook for userState. 
+- [] setup homepage
+  - [x] setup protected route for homepage 
+  - [x] setup header
+    - [x] setup Profile.jsx
+      - [] for navbar, setup user response from server to include, profile image link, number of unread notifications.
+  - [x] setup navbar
+  - [x] setup sidebar with options
+  - [ ] setup sidebar with responsive width, when width changes sidebar width should also change
+  - [] setup properties
+  - [] setup properties/id/edit on frontend - which sends request to updateProperty on backend
+    - [x] setup property model
+    - [x] add property
+    - [x] get property
+    - [x] get properties
+    - [] delete property
+    - [] update property
+    - [] sort by price,date,ratings  // get help from ecommerce api backend project
+    - [] filter by price, ratings, location, features etc.
+    - [] expand on sorting and filtering appropriately
+    - [] Filters in get property e.g. sort by date, renter id, 
+    - [] setup properties page
+      - [x] find how to setup filters and search page with handlers in properties page. check chatgpt chat.
+      - [] implement filters on backend so that we only those filter options which are available in our database
+      - [x] for fetching data we'll not use actions, we'll just use react query inside the properties component
+        - [x] research if to use reducers for properties or not? if we decide to do it, then we'll also need to store filters in redux as well so that we can invalidate queries when the filters change and fetch fresh data.
+        - [x] don't need to manually invalidate, when filters are updated in state, the prev state is automatially invalidated.
+      - [] setup pagination on the backend
+      - [] then setup pagination in the frontend 
+    - 
+    - 
+- [x] setup loading page for outlet page in dashboard page. (not working properly yet)
