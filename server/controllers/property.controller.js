@@ -6,34 +6,81 @@ const { User } = require("../models/User.model")
 const getAllProperties = async (req, res) => {
   const userId = req.user.id
 
-  const { search: searchTerm } = req.query
-
-  // when there is a search term from search box, its for this. only searches across text based details.
-  const query = {
-    $or: [
-      { "address.city": { $regex: searchTerm, $options: "i" } },
-      { "address.state": { $regex: searchTerm, $options: "i" } },
-      { "address.postalCode": { $regex: searchTerm, $options: "i" } },
-      { "address.street": { $regex: searchTerm, $options: "i" } },
-      { category: { $regex: searchTerm, $options: "i" } },
-    ]
-  };
-
-
-
-  console.log(searchTerm);
-
   // double check if user exists or not
   const user = await User.findById(userId)
   if (!user) {
     throw new UnAuthorizedError('You\'re not authorized access this resource')
   }
 
-  const properties = await Property.find({
-    owner: userId, ...query
-  })
+  const { search, beds, baths } = req.query
 
-  res.status(StatusCodes.OK).json({ data: properties })
+  // when there is a search term from search box, its for this. only searches across text based details.
+  const query = { owner: userId }
+
+  const textSearchConditions = [
+    { "address.city": { $regex: search, $options: "i" } },
+    { "address.state": { $regex: search, $options: "i" } },
+    { "address.postalCode": { $regex: search, $options: "i" } },
+    { "address.street": { $regex: search, $options: "i" } },
+    { category: { $regex: search, $options: "i" } },
+  ]
+  const bathsQuery = { "details.baths": { $gte: baths && Number(baths) } }
+  const bedsQuery = { "details.beds": { $gte: beds && Number(beds) } }
+
+  if (search) {
+    if (query.$or) {
+      query.$or.push(...textSearchConditions)
+    } else query.$or = [...textSearchConditions]
+  }
+
+  if (baths) {
+    if (query.$and) {
+      query.$and.push(bathsQuery)
+    } else query.$and = [bathsQuery]
+  }
+  if (beds) {
+    if (query.$and) {
+      query.$and.push(bedsQuery)
+    } else query.$and = [bedsQuery]
+  }
+
+  // return res.send(query)
+
+  // const query = {
+  //   $or: [
+  //     { "details.baths": { $gte: baths && Number(baths) } },
+  //     { "details.beds": { $gte: beds && Number(beds) } },
+  //   ]
+  // };
+
+  // console.log(search);
+
+  const filters = await Property.aggregate({  })
+  const totalItems = await Property.find().countDocuments({ ...query })
+
+  const limit = Number(req.query.limit) || 2
+  const page = Number(req.query.page) || 1
+  const skip = (page - 1) * limit
+  const pageCount = Math.ceil(totalItems / limit)
+
+  const properties = await Property.find({
+    ...query
+  }).skip(skip).limit(limit)
+
+  res.status(StatusCodes.OK).json({
+    data: properties,
+    meta: {
+      pagination: {
+        totalItems,
+        page,
+        pageCount,
+        limit //can also be sent as pageSize
+      }
+    },
+    filters: {
+
+    }
+  })
 }
 
 const getSingleProperty = async (req, res) => {
