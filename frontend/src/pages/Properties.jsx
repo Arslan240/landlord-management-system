@@ -13,25 +13,28 @@ const PropertiesContext = createContext()
 
 // still not used anywhere. I thought to create filters object here and render based on this. but maybe not.
 // we'll get filters for each data route from server eventually
-const filterConfig = [{
-  name: 'price',
-  icon: '$'
-}, {
-  name: 'sqft',
-  icon: 'm2'
-}]
+const filterConfig = [
+  {
+    name: "price",
+    icon: "$",
+  },
+  {
+    name: "sqft",
+    icon: "m2",
+  },
+]
 
 // first of all setup react query and then we'll be able to determine at which level we need what and will react query be able to fetch data
 // just setup a simple properties context here
 // inside filters component setup filter config with filter handler which updates state in the context
 // iterate over values in filterconfig to render single filters
 // inside single filter use filter handler to update filter value.
-// 
+//
 
 const Properties = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const searchRef = useRef()
-  console.log(searchRef.current && searchRef.current.value);
+  console.log(searchRef.current && searchRef.current.value)
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value)
@@ -42,39 +45,40 @@ const Properties = () => {
   const { properties, filters } = usePropertyState()
   // react query
   const { data, isFetching, error } = useQuery({
-    queryKey: ['properties', filters],
+    queryKey: ["properties", filters],
     queryFn: async () => {
-      const { data } = await customFetch('properties')
+      const { data } = await customFetch("properties")
       return data.data
-    }
+    },
   })
 
   // updating properties in redux
   useEffect(() => {
-    if (data) {
-      dispatch(setProperties(data))
+    const properties = data?.properties
+    const serverFilters = data?.filters
+    if (properties) {
+      dispatch(setProperties(properties))
     }
   }, [data, dispatch])
 
-  console.log('Properties: ', properties);
-  console.log(filters);
-
+  console.log("Properties: ", properties)
+  console.log(filters)
 
   return (
     <PropertiesContext.Provider value={{ setSearchTerm, filterConfig }}>
-      <section className="pb-5">
-        <h1 className="capitalize text-3xl font-semibold">properties</h1>
+      <section className='pb-5'>
+        <h1 className='capitalize text-3xl font-semibold'>properties</h1>
         {/* search and filters */}
-        <div className="flex flex-col md:flex-row justify-between py-3">
+        <div className='flex flex-col md:flex-row justify-between py-3'>
           <div>
-            <Search placeholder={'Search properties'} changeHandler={handleSearch} ref={searchRef} />
+            <Search placeholder={"Search properties"} changeHandler={handleSearch} ref={searchRef} />
           </div>
           <Filters />
         </div>
         {/* <p>hello</p> */}
         {isFetching && <Loading />}
-        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {!isFetching && properties && properties.map(item => <Property key={item._id} {...item} />)}
+        <section className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+          {!isFetching && properties && properties.map((item) => <Property key={item._id} {...item} />)}
         </section>
       </section>
     </PropertiesContext.Provider>
