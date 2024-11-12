@@ -1,6 +1,10 @@
 const { StatusCodes } = require("http-status-codes")
 const Property = require("../models/Property.model")
-const { BadRequestError, UnAuthorizedError, NotFoundError } = require("../errors")
+const {
+  BadRequestError,
+  UnAuthorizedError,
+  NotFoundError,
+} = require("../errors")
 const { User } = require("../models/User.model")
 
 const getAllProperties = async (req, res) => {
@@ -9,7 +13,7 @@ const getAllProperties = async (req, res) => {
   // double check if user exists or not
   const user = await User.findById(userId)
   if (!user) {
-    throw new UnAuthorizedError('You\'re not authorized access this resource')
+    throw new UnAuthorizedError("You're not authorized access this resource")
   }
 
   const { search, beds, baths } = req.query
@@ -46,16 +50,9 @@ const getAllProperties = async (req, res) => {
 
   // return res.send(query)
 
-  // const query = {
-  //   $or: [
-  //     { "details.baths": { $gte: baths && Number(baths) } },
-  //     { "details.beds": { $gte: beds && Number(beds) } },
-  //   ]
-  // };
-
   // console.log(search);
 
-  const filters = await Property.aggregate({  })
+  const propertyFilters = await generatePropertiesFilters()
   const totalItems = await Property.find().countDocuments({ ...query })
 
   const limit = Number(req.query.limit) || 2
@@ -64,22 +61,24 @@ const getAllProperties = async (req, res) => {
   const pageCount = Math.ceil(totalItems / limit)
 
   const properties = await Property.find({
-    ...query
-  }).skip(skip).limit(limit)
+    ...query,
+  })
+    .skip(skip)
+    .limit(limit)
 
   res.status(StatusCodes.OK).json({
-    data: properties,
+    data: {
+      properties,
+      filters: propertyFilters,
+    },
     meta: {
       pagination: {
         totalItems,
         page,
         pageCount,
-        limit //can also be sent as pageSize
-      }
+        limit, //can also be sent as pageSize
+      },
     },
-    filters: {
-
-    }
   })
 }
 
@@ -93,11 +92,11 @@ const getSingleProperty = async (req, res) => {
 
   const property = await Property.findOne({ _id: propertyId, owner })
   if (!property) {
-    throw new NotFoundError('Property not found')
+    throw new NotFoundError("Property not found")
   }
 
   res.status(StatusCodes.OK).json({
-    data: property
+    data: property,
   })
 }
 
@@ -106,53 +105,120 @@ const addProperty = async (req, res) => {
   const { id: owner } = req.user
   const { address, details, ...rest } = data
 
-  console.log(req.user);
+  console.log(req.user)
 
   if (!owner) {
-    throw new BadRequestError('Please provide owner')
+    throw new BadRequestError("Please provide owner")
   }
   if (!details) {
-    throw new BadRequestError('Please provide complete details')
+    throw new BadRequestError("Please provide complete details")
   }
   if (!details.sqft) {
-    throw new BadRequestError('Please provide sqft')
+    throw new BadRequestError("Please provide sqft")
   }
   if (!details.bathrooms) {
-    throw new BadRequestError('Please provide number of bathrooms')
+    throw new BadRequestError("Please provide number of bathrooms")
   }
   if (!details.bedrooms) {
-    throw new BadRequestError('Please provide number of bedrooms')
+    throw new BadRequestError("Please provide number of bedrooms")
   }
   if (!address) {
-    throw new BadRequestError('Please provide complete address')
+    throw new BadRequestError("Please provide complete address")
   }
 
   const user = await User.findById(owner)
   if (!user) {
-    console.log('user doesn\'t exist');
-    throw new BadRequestError('User doesn\'t exist')
+    console.log("user doesn't exist")
+    throw new BadRequestError("User doesn't exist")
   }
 
   const property = await Property.create({
     owner,
     address,
     ...rest,
-    details
+    details,
   })
 
   if (!property) {
-    console.log('user not created in addProperty controller');
-    throw new Error('Something went wrong')
+    console.log("user not created in addProperty controller")
+    throw new Error("Something went wrong")
   }
 
   res.status(StatusCodes.CREATED).send({ property })
 }
 
-
 module.exports = {
   getAllProperties,
   getSingleProperty,
-  addProperty
+  addProperty,
 }
 
 // TODO: find validation error type in error handler middleware, and find a way to show the error in a better way. for address. just send back the error address is not complete.
+
+// Property Filters Generator
+const generatePropertiesFilters = async () => {
+  const [rentRange] = await Property.aggregate([
+    {
+      $group: {
+        _id: null,
+        min: { $min: "$details.rent" },
+        max: { $max: "$details.rent" },
+      },
+    },
+  ])
+
+  const [sqftRange] = await Property.aggregate([
+    {
+      $group: {
+        _id: null,
+        min: { $min: "$details.sqft" },
+        max: { $max: "$details.sqft" },
+      },
+    },
+  ])
+  const [bedsRange] = await Property.aggregate([
+    {
+      $group: {
+        _id: null,
+        min: { $min: "$details.beds" },
+        max: { $max: "$details.beds" },
+      },
+    },
+  ])
+  const [bathsRange] = await Property.aggregate([
+    {
+      $group: {
+        _id: null,
+        min: { $min: "$details.baths" },
+        max: { $max: "$details.baths" },
+      },
+    },
+  ])
+  const [yearBuiltRange] = await Property.aggregate([
+    {
+      $group: {
+        _id: null,
+        min: { $min: "$details.yearBuilt" },
+        max: { $max: "$details.yearBuilt" },
+      },
+    },
+  ])
+  const [garageRange] = await Property.aggregate([
+    {
+      $group: {
+        _id: null,
+        min: { $min: "$details.garage" },
+        max: { $max: "$details.garage" },
+      },
+    },
+  ])
+
+  return {
+    rentRange: { min: rentRange?.min, max: rentRange?.max },
+    sqftRange: { min: sqftRange?.min, max: sqftRange?.max },
+    bedsRange: { min: bedsRange?.min, max: bedsRange?.max },
+    bathsRange: { min: bathsRange?.min, max: bathsRange?.max },
+    yearBuiltRange: { min: yearBuiltRange?.min, max: yearBuiltRange?.max },
+    garageRange: { min: garageRange?.min, max: garageRange?.max },
+  }
+}
