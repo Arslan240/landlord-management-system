@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query"
 import { customFetch } from "../utils"
 import RequireAuth from "../components/RequireAuth"
 import { useDispatch, useSelector } from "react-redux"
-import { setProperties, usePropertyState } from "../redux/propertySlice"
+import { setProperties, setServerFilters, usePropertyState } from "../redux/propertySlice"
 import Loading from "../components/Loading"
 import Property from "../components/Property"
 
@@ -59,6 +59,9 @@ const Properties = () => {
     if (properties) {
       dispatch(setProperties(properties))
     }
+    if (serverFilters) {
+      dispatch(setServerFilters(serverFilters))
+    }
   }, [data, dispatch])
 
   console.log("Properties: ", properties)
@@ -66,10 +69,10 @@ const Properties = () => {
 
   return (
     <PropertiesContext.Provider value={{ setSearchTerm, filterConfig }}>
-      <section className='pb-5'>
-        <h1 className='capitalize text-3xl font-semibold'>properties</h1>
+      <section className="pb-5">
+        <h1 className="capitalize text-3xl font-semibold">properties</h1>
         {/* search and filters */}
-        <div className='flex flex-col md:flex-row justify-between py-3'>
+        <div className="flex flex-col md:flex-row justify-between py-3">
           <div>
             <Search placeholder={"Search properties"} changeHandler={handleSearch} ref={searchRef} />
           </div>
@@ -77,7 +80,7 @@ const Properties = () => {
         </div>
         {/* <p>hello</p> */}
         {isFetching && <Loading />}
-        <section className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {!isFetching && properties && properties.map((item) => <Property key={item._id} {...item} />)}
         </section>
       </section>
