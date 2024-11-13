@@ -5,11 +5,29 @@ import { useQuery } from "@tanstack/react-query"
 import { customFetch } from "../utils"
 import RequireAuth from "../components/RequireAuth"
 import { useDispatch, useSelector } from "react-redux"
-import { setProperties, setServerFilters, usePropertyState } from "../redux/propertySlice"
+import { setProperties, setServerFilters, setServerFiltersAndProperties, usePropertyState } from "../redux/propertySlice"
 import Loading from "../components/Loading"
 import Property from "../components/Property"
 
-const PropertiesContext = createContext()
+// first we'll have only serverFilters and selectedFilters in propertySlice.
+// serverFilters will have an initialState with all the filters so that we don't get those empty box where name is not available when the states are fetched. Maybe it'll not happen this time because selectedFilters will have localState which will then be persisted to redux.
+// selectedFilters be empty at first.
+// properties page renders, inside useQuery we set key to be queryKey: ['properties',selectedFilters], and also we create a params object from selectedFilters object which we send as params in the request.
+// from data we get serverFilters and we setup serverFilters.
+// inside Filters, we render filters based on serverFilters.
+// inside Filters we'll create maybe localstate to save the values and when applyfilters is clicked, we pertain this to reducer in selectedFilters.
+// when selectedFilters change, new properties are rendered and selectedFilters are used as key
+// we receive serverFilters, that we maybe should pertain to reducer.
+// we keep properties in queryClient store, because they are already stored in react query store, no point in storing them in redux as well.
+// when we need properties data we'll just use the stored properties.
+// in selectedFilters, there will be min and max values because we'll have a slider and an input for specific value.
+// if value is written in input area, then we set min to that value and max to "".
+// if value is selected using slider, we override min and max both with new values.
+// now our selectedFilters have lets say adequate values. Now we got to params object creation from filters.
+// PARAMS OBJECT
+// we iterate over selectedFilters and look for min and max values. First if max is "", we use filter sign of '=' for that attribute
+// if max is not "", we check both max and min, and then we setup >= for min and <= for max value.
+// on the backend we'll also need to update our query object based on this. refer to john smilga node course. maybe in ecommerce api project.
 
 // still not used anywhere. I thought to create filters object here and render based on this. but maybe not.
 // we'll get filters for each data route from server eventually
@@ -34,7 +52,7 @@ const filterConfig = [
 const Properties = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const searchRef = useRef()
-  console.log(searchRef.current && searchRef.current.value)
+  // console.log(searchRef.current && searchRef.current.value)
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value)
@@ -56,37 +74,38 @@ const Properties = () => {
   useEffect(() => {
     const properties = data?.properties
     const serverFilters = data?.filters
-    if (properties) {
-      dispatch(setProperties(properties))
+    if (properties && serverFilters) {
+      dispatch(setServerFiltersAndProperties(data))
+    } else {
+      console.log("properties and serverFilters are not defined")
     }
-    if (serverFilters) {
-      dispatch(setServerFilters(serverFilters))
-    }
+    // if (properties) {
+    //   dispatch(setProperties(properties))
+    // }
+    // if (serverFilters) {
+    //   dispatch(setServerFilters(serverFilters))
+    // }
   }, [data, dispatch])
 
   console.log("Properties: ", properties)
   console.log(filters)
 
   return (
-    <PropertiesContext.Provider value={{ setSearchTerm, filterConfig }}>
-      <section className="pb-5">
-        <h1 className="capitalize text-3xl font-semibold">properties</h1>
-        {/* search and filters */}
-        <div className="flex flex-col md:flex-row justify-between py-3">
-          <div>
-            <Search placeholder={"Search properties"} changeHandler={handleSearch} ref={searchRef} />
-          </div>
-          <Filters />
+    <section className="pb-5">
+      <h1 className="capitalize text-3xl font-semibold">properties</h1>
+      {/* search and filters */}
+      <div className="flex flex-col md:flex-row justify-between py-3">
+        <div>
+          <Search placeholder={"Search properties"} changeHandler={handleSearch} />
         </div>
-        {/* <p>hello</p> */}
-        {isFetching && <Loading />}
-        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {!isFetching && properties && properties.map((item) => <Property key={item._id} {...item} />)}
-        </section>
+        <Filters />
+      </div>
+      {/* <p>hello</p> */}
+      {isFetching && <Loading />}
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {!isFetching && properties && properties.map((item) => <Property key={item._id} {...item} />)}
       </section>
-    </PropertiesContext.Provider>
+    </section>
   )
 }
 export default RequireAuth(Properties)
-
-export const usePropertiesContext = () => useContext(PropertiesContext)
