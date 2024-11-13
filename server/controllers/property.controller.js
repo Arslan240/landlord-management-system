@@ -69,7 +69,7 @@ const getAllProperties = async (req, res) => {
     } else query.$and = [yearQuery]
   }
 
-  return res.send(query)
+  // return res.send(query)
 
   // console.log(search);
 
