@@ -3,62 +3,54 @@ import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 
 const initialState = {
-  properties: undefined, //undefined: fetching,
-  filters: {},
+  serverFilters: {
+    rent: { index: 0, name: "rent" },
+    sqft: { index: 1, name: "sqft" },
+    beds: { index: 2, name: "beds" },
+    baths: { index: 3, name: "baths" },
+    year: { index: 4, name: "year" },
+    garage: { index: 5, name: "garage" },
+  },
+  selectedFilters: {},
 }
 
 const propertySlice = createSlice({
   name: "properties",
   initialState: initialState,
   reducers: {
-    setProperties: (state, action) => {
-      state.properties = action.payload
-    },
     // updated setFilters
     setFilters: (state, action) => {
-      const { name, value } = action.payload
+      const { name, ...rest } = action.payload //it'll receive min and max value, it might need to be changed later.
 
       if (!name) {
         toast.error("Provide both name and value in redux")
         return
       }
 
-      state.filters = {
-        ...state.filters,
+      const prevFilter = state.selectedFilters[name]
+      state.selectedFilters = {
+        ...state.selectedFilters,
         [name]: {
-          ...state.filters[name],
-          value,
+          ...rest,
         },
       }
       console.log(action.payload)
     },
     // figure out a way, how to maintain selected value state when a new request is made. maybe before storing filters, check if selected value is present then use that. And based on that update styles properly.
     setServerFilters: (state, action) => {
-      console.log("state before updated")
-
-      let serverFilters = action.payload
-      let newFilters = {}
-
-      Object.keys(serverFilters).forEach((key) => {
-        const singleFilter = serverFilters[key]
-        const { name } = singleFilter
-        const prevSelect = state.filters[name]?.selectedValue || 10
-        newFilters[name] = {
-          selectedValue: prevSelect === "" ? "" : prevSelect,
-          ...singleFilter,
-        }
-      })
-      console.log(newFilters)
-      state.filters = newFilters
+      state.serverFilters = action.payload
     },
     setServerFiltersAndProperties: (state, action) => {
       state.properties = action.payload.properties
       state.filters = action.payload.filters
     },
+    resetFilters: (state, action) => {
+      state.selectedFilters = {}
+    },
   },
 })
 
-export const { setProperties, setFilters, setServerFilters, setServerFiltersAndProperties } = propertySlice.actions
+export const { setFilters, setServerFilters, setServerFiltersAndProperties } = propertySlice.actions
 
 export const usePropertyState = () => useSelector((state) => state.propertyState)
 
