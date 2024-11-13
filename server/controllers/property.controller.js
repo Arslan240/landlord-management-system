@@ -12,7 +12,7 @@ const getAllProperties = async (req, res) => {
     throw new UnAuthorizedError("You're not authorized access this resource")
   }
 
-  const { search, beds, baths } = req.query
+  const { search, beds, baths, garage, rent, sqft, year } = req.query
 
   // when there is a search term from search box, its for this. only searches across text based details.
   const query = { owner: userId }
@@ -24,8 +24,12 @@ const getAllProperties = async (req, res) => {
     { "address.street": { $regex: search, $options: "i" } },
     { category: { $regex: search, $options: "i" } },
   ]
-  const bathsQuery = { "details.baths": { $gte: baths && Number(baths) } }
   const bedsQuery = { "details.beds": { $gte: beds && Number(beds) } }
+  const bathsQuery = { "details.baths": { $gte: baths && Number(baths) } }
+  const garageQuery = { "details.garage": { $gte: garage && Number(garage) } }
+  const rentQuery = { "details.rent": { $gte: rent && Number(rent) } }
+  const sqftQuery = { "details.sqft": { $gte: sqft && Number(sqft) } }
+  const yearQuery = { "details.year": { $gte: year && Number(year) } }
 
   if (search) {
     if (query.$or) {
@@ -33,18 +37,39 @@ const getAllProperties = async (req, res) => {
     } else query.$or = [...textSearchConditions]
   }
 
-  if (baths) {
-    if (query.$and) {
-      query.$and.push(bathsQuery)
-    } else query.$and = [bathsQuery]
-  }
   if (beds) {
     if (query.$and) {
       query.$and.push(bedsQuery)
     } else query.$and = [bedsQuery]
   }
 
-  // return res.send(query)
+  if (baths) {
+    if (query.$and) {
+      query.$and.push(bathsQuery)
+    } else query.$and = [bathsQuery]
+  }
+  if (garage) {
+    if (query.$and) {
+      query.$and.push(garageQuery)
+    } else query.$and = [garageQuery]
+  }
+  if (rent) {
+    if (query.$and) {
+      query.$and.push(rentQuery)
+    } else query.$and = [rentQuery]
+  }
+  if (sqft) {
+    if (query.$and) {
+      query.$and.push(sqftQuery)
+    } else query.$and = [sqftQuery]
+  }
+  if (year) {
+    if (query.$and) {
+      query.$and.push(yearQuery)
+    } else query.$and = [yearQuery]
+  }
+
+  return res.send(query)
 
   // console.log(search);
 
@@ -210,11 +235,11 @@ const generatePropertiesFilters = async () => {
   ])
 
   return {
-    rentRange: { index: 0, name: "rent", min: rentRange?.min, max: rentRange?.max },
-    sqftRange: { index: 1, name: "sqft", min: sqftRange?.min, max: sqftRange?.max },
-    bedsRange: { index: 2, name: "beds", min: bedsRange?.min, max: bedsRange?.max },
-    bathsRange: { index: 3, name: "baths", min: bathsRange?.min, max: bathsRange?.max },
-    yearBuiltRange: { index: 4, name: "year", min: yearBuiltRange?.min, max: yearBuiltRange?.max },
-    garageRange: { index: 5, name: "garages", min: garageRange?.min, max: garageRange?.max },
+    rent: { index: 0, name: "rent", min: rentRange?.min, max: rentRange?.max },
+    sqft: { index: 1, name: "sqft", min: sqftRange?.min, max: sqftRange?.max },
+    beds: { index: 2, name: "beds", min: bedsRange?.min, max: bedsRange?.max },
+    baths: { index: 3, name: "baths", min: bathsRange?.min, max: bathsRange?.max },
+    year: { index: 4, name: "year", min: yearBuiltRange?.min, max: yearBuiltRange?.max },
+    garage: { index: 5, name: "garage", min: garageRange?.min, max: garageRange?.max },
   }
 }
