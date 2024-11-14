@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react"
 import Search from "../components/Search"
 import Filters from "../components/Filters"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { customFetch } from "../utils"
 import RequireAuth from "../components/RequireAuth"
 import { useDispatch, useSelector } from "react-redux"
-import { setProperties, setServerFilters, setServerFiltersAndProperties, usePropertyState } from "../redux/propertySlice"
+import { setServerFilters, usePropertyState } from "../redux/propertySlice"
 import Loading from "../components/Loading"
 import Property from "../components/Property"
 
@@ -31,16 +31,6 @@ import Property from "../components/Property"
 
 // still not used anywhere. I thought to create filters object here and render based on this. but maybe not.
 // we'll get filters for each data route from server eventually
-const filterConfig = [
-  {
-    name: "price",
-    icon: "$",
-  },
-  {
-    name: "sqft",
-    icon: "m2",
-  },
-]
 
 // first of all setup react query and then we'll be able to determine at which level we need what and will react query be able to fetch data
 // just setup a simple properties context here
@@ -53,59 +43,56 @@ const Properties = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const searchRef = useRef()
   // console.log(searchRef.current && searchRef.current.value)
-
   const handleSearch = (e) => {
     setSearchTerm(e.target.value)
   }
 
   // redux
   const dispatch = useDispatch()
-  const { properties, filters } = usePropertyState()
+  const { selectedFilters, serverFilters } = usePropertyState()
   // react query
   const { data, isFetching, error } = useQuery({
-    queryKey: ["properties", filters],
+    queryKey: ["properties", selectedFilters],
     queryFn: async () => {
       const { data } = await customFetch("properties")
       return data.data
     },
   })
 
+  const properties = data?.properties || []
+
   // updating properties in redux
   useEffect(() => {
-    const properties = data?.properties
     const serverFilters = data?.filters
-    if (properties && serverFilters) {
-      dispatch(setServerFiltersAndProperties(data))
-    } else {
-      console.log("properties and serverFilters are not defined")
+    if (serverFilters) {
+      dispatch(setServerFilters(serverFilters))
     }
-    // if (properties) {
-    //   dispatch(setProperties(properties))
-    // }
-    // if (serverFilters) {
-    //   dispatch(setServerFilters(serverFilters))
-    // }
   }, [data, dispatch])
 
   console.log("Properties: ", properties)
-  console.log(filters)
+  console.log("Server Filters: ", serverFilters)
+  console.log("Property State: ", usePropertyState())
 
   return (
     <section className="pb-5">
       <h1 className="capitalize text-3xl font-semibold">properties</h1>
       {/* search and filters */}
-      <div className="flex flex-col md:flex-row justify-between py-3">
+      <div className="flex flex-col md:flex-row justify-between py-3 gap-5">
         <div>
           <Search placeholder={"Search properties"} changeHandler={handleSearch} />
         </div>
-        <Filters />
+        <Filters serverFilters={serverFilters} />
       </div>
       {/* <p>hello</p> */}
       {isFetching && <Loading />}
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {/* <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-fit place-items-center"> */}
+      {/* <section className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4"> */} {/** for complete auto grow do 250px,1fr */}
+      <section className="grid grid-cols-[repeat(auto-fit,minmax(200px,280px))] gap-4 justify-center">
         {!isFetching && properties && properties.map((item) => <Property key={item._id} {...item} />)}
       </section>
     </section>
   )
 }
 export default RequireAuth(Properties)
+
+Properties.whyDidYouRender = true
