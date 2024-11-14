@@ -20,14 +20,13 @@ const propertySlice = createSlice({
   reducers: {
     // updated setFilters
     setFilters: (state, action) => {
-      const { name, ...rest } = action.payload //it'll receive min and max value, it might need to be changed later.
+      const { name, ...rest } = action.payload //it'll receive min and max value, it might need to be changed later. if max is undefined from action.payload, then delete it from the state.selectedFilters[name]. if max is present then min and max both should be present. just pass them along using rest.
 
       if (!name) {
         toast.error("Provide both name and value in redux")
         return
       }
 
-      const prevFilter = state.selectedFilters[name]
       state.selectedFilters = {
         ...state.selectedFilters,
         [name]: {
@@ -39,10 +38,6 @@ const propertySlice = createSlice({
     // figure out a way, how to maintain selected value state when a new request is made. maybe before storing filters, check if selected value is present then use that. And based on that update styles properly.
     setServerFilters: (state, action) => {
       state.serverFilters = action.payload
-    },
-    setServerFiltersAndProperties: (state, action) => {
-      state.properties = action.payload.properties
-      state.filters = action.payload.filters
     },
     resetFilters: (state, action) => {
       state.selectedFilters = {}
