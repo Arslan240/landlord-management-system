@@ -1,35 +1,35 @@
-import { useState } from "react"
+import React, { createContext, useContext, useState } from "react"
 import Dropdown from "./Dropdown"
 import { usePropertyState } from "../redux/propertySlice"
-import { Bath, Bed, CarFront } from "lucide-react"
+import { Bath, Bed, CarFront, Filter } from "lucide-react"
 
-// find a way to render filters from array values.
-// preferrabely server will send us filter values which we'll use to render filters. (server will know which unique values are present, so we'll only render those options which are actually present in the backend)
-const Filters = () => {
-  // fetch values of filter values
-  const { filters } = usePropertyState()
+const FiltersContext = createContext()
 
-  const sortedFilters = Object.values(filters).sort((a, b) => a.index - b.index)
+const Filters = React.memo(({ serverFilters = [] }) => {
+  const sortedFilters = Object.values(serverFilters).sort((a, b) => a.index - b.index)
+  console.log("Filters rendered", sortedFilters)
 
   return (
-    <div className="py-3 md:py-0 flex flex-wrap text-primary">
-      {sortedFilters.map((filter) => {
-        let { name } = filter
-
-        return <SingleFilter name={name} icon={getIcon(name)} />
-      })}
-      {/* <SingleFilter name={"price"} icon={"$"} />
-      <SingleFilter name={"sqft"} icon={"m2"} /> */}
-      {/* <SingleFilter name={'beds'} />
-      <SingleFilter name={'baths'} /> */}
-    </div>
+    <FiltersContext.Provider value={serverFilters}>
+      <div className="py-3 md:py-0 flex flex-wrap text-primary items-center gap-[0.1rem] ">
+        {sortedFilters.map((filter, index) => {
+          let { name } = filter
+          return <SingleFilter name={name} key={`${name}${index}`} />
+        })}
+      </div>
+    </FiltersContext.Provider>
   )
-}
+})
 export default Filters
 
-const SingleFilter = ({ name, icon }) => {
+Filters.whyDidYouRender = true
+
+const SingleFilter = ({ name }) => {
+  const serverFilters = useFiltersContext()
+  const { min, max } = serverFilters[name]
+
+  const icon = getIcon(name)
   // if a value is selected then change border color to primary ligh and background to lightest to show that this filter is being used.
-  // const { filters } = usePropertyState()
 
   return (
     <div className="dropdown dropdown-end">
@@ -37,7 +37,7 @@ const SingleFilter = ({ name, icon }) => {
         {icon && <span>{icon}</span>}
         <span>{name}</span>
       </div>
-      <Dropdown items={["1599", "1789"]} name={name} />
+      <Dropdown name={name} min={min} max={max} />
     </div>
   )
 }
@@ -62,3 +62,5 @@ const getIcon = (name) => {
     }
   }
 }
+
+export const useFiltersContext = () => useContext(FiltersContext)
