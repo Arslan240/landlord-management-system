@@ -2,6 +2,9 @@ import { createSlice } from "@reduxjs/toolkit"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 
+// selectedFilters are part of key for react query.
+// so they only update when some values from filters are selected
+
 const initialState = {
   serverFilters: {
     rent: { index: 0, name: "rent" },
