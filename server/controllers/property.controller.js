@@ -11,64 +11,13 @@ const getAllProperties = async (req, res) => {
   if (!user) {
     throw new UnAuthorizedError("You're not authorized access this resource")
   }
-
+  console.log(req.query)
   const { search, beds, baths, garage, rent, sqft, year } = req.query
 
   // when there is a search term from search box, its for this. only searches across text based details.
   const query = { owner: userId }
 
-  const textSearchConditions = [
-    { "address.city": { $regex: search, $options: "i" } },
-    { "address.state": { $regex: search, $options: "i" } },
-    { "address.postalCode": { $regex: search, $options: "i" } },
-    { "address.street": { $regex: search, $options: "i" } },
-    { category: { $regex: search, $options: "i" } },
-  ]
-  const bedsQuery = { "details.beds": { $gte: beds && Number(beds) } }
-  const bathsQuery = { "details.baths": { $gte: baths && Number(baths) } }
-  const garageQuery = { "details.garage": { $gte: garage && Number(garage) } }
-  const rentQuery = { "details.rent": { $gte: rent && Number(rent) } }
-  const sqftQuery = { "details.sqft": { $gte: sqft && Number(sqft) } }
-  const yearQuery = { "details.year": { $gte: year && Number(year) } }
-
-  if (search) {
-    if (query.$or) {
-      query.$or.push(...textSearchConditions)
-    } else query.$or = [...textSearchConditions]
-  }
-
-  if (beds) {
-    if (query.$and) {
-      query.$and.push(bedsQuery)
-    } else query.$and = [bedsQuery]
-  }
-
-  if (baths) {
-    if (query.$and) {
-      query.$and.push(bathsQuery)
-    } else query.$and = [bathsQuery]
-  }
-  if (garage) {
-    if (query.$and) {
-      query.$and.push(garageQuery)
-    } else query.$and = [garageQuery]
-  }
-  if (rent) {
-    if (query.$and) {
-      query.$and.push(rentQuery)
-    } else query.$and = [rentQuery]
-  }
-  if (sqft) {
-    if (query.$and) {
-      query.$and.push(sqftQuery)
-    } else query.$and = [sqftQuery]
-  }
-  if (year) {
-    if (query.$and) {
-      query.$and.push(yearQuery)
-    } else query.$and = [yearQuery]
-  }
-
+  generateDBQuery(req.query, query)
   // return res.send(query)
 
   // console.log(search);
@@ -175,6 +124,108 @@ module.exports = {
 }
 
 // TODO: find validation error type in error handler middleware, and find a way to show the error in a better way. for address. just send back the error address is not complete.
+
+// generate proper query for db query
+const generateDBQuery = (queryParams, query) => {
+  // prettier-ignore
+  const { search, rent_min, rent_max, 
+    sqft_min, sqft_max, 
+    beds_min, beds_max, 
+    baths_min, baths_max, 
+    year_min, year_max, 
+    garage_min, garage_max } = queryParams
+
+  const textSearchConditions = [
+    { "address.plotNo": { $regex: search, $options: "i" } },
+    { "address.city": { $regex: search, $options: "i" } },
+    { "address.state": { $regex: search, $options: "i" } },
+    { "address.street": { $regex: search, $options: "i" } },
+    { "address.postalCode": { $regex: search, $options: "i" } },
+    { category: { $regex: search, $options: "i" } },
+  ]
+
+  if (search) {
+    if (query.$or) {
+      query.$or.push(...textSearchConditions)
+    } else query.$or = textSearchConditions
+  }
+
+  let rentQuery = {}
+  if (rent_min && rent_max) {
+    rentQuery = { "details.rent": { $gte: Number(rent_min), $lte: Number(rent_max) } }
+  } else if (rent_min) {
+    rentQuery = { "details.rent": { $eq: Number(rent_min) } }
+  }
+
+  let sqftQuery = {}
+  if (sqft_min && sqft_max) {
+    sqftQuery = { "details.sqft": { $gte: Number(sqft_min), $lte: Number(sqft_max) } }
+  } else if (sqft_min) {
+    sqftQuery = { "details.sqft": { $eq: Number(sqft_min) } }
+  }
+
+  let bedsQuery = {}
+  if (beds_min && beds_max) {
+    bedsQuery = { "details.beds": { $gte: Number(beds_min), $lte: Number(beds_max) } }
+  } else if (beds_min) {
+    bedsQuery = { "details.beds": { $eq: Number(beds_min) } }
+  }
+
+  let bathsQuery = {}
+  if (baths_min && baths_max) {
+    bathsQuery = { "details.baths": { $gte: Number(baths_min), $lte: Number(baths_max) } }
+  } else if (baths_min) {
+    bathsQuery = { "details.baths": { $eq: Number(baths_min) } }
+  }
+
+  let yearQuery = {}
+  if (year_min && year_max) {
+    yearQuery = { "details.yearBuilt": { $gte: Number(year_min), $lte: Number(year_max) } }
+  } else if (year_min) {
+    yearQuery = { "details.yearBuilt": { $eq: Number(year_min) } }
+  }
+
+  let garageQuery = {}
+  if (garage_min && garage_max) {
+    garageQuery = { "details.garage": { $gte: Number(garage_min), $lte: Number(garage_max) } }
+  } else if (garage_min) {
+    garageQuery = { "details.garage": { $eq: Number(garage_min) } }
+  }
+
+  // it passes all the created queryObjects to function to create a $and array of them.
+  addTo$ANDQuery([rentQuery, sqftQuery, bedsQuery, bathsQuery, yearQuery, garageQuery], query)
+  console.log(query)
+  return query
+}
+
+/**
+ * Adds query filters to $and array of MongoDB query object based on given query parameters. If no $and it'll be created otherwise appended to already present $and array
+ *
+ * @param {Object | Array} queriesToBeAdded - A single object or an array of objects i.e. object with mongodb filter syntax.
+ * like: `{ "details.garage": { $eq: Number(garage_min) } }`
+ * @param {Object} query - The base query object to which the $and array containing `queriesToBeAdded` filters will be added.
+ * @returns {Object} The modified query object with additional filters.
+ */
+const addTo$ANDQuery = (queriesToBeAdded, queryObj) => {
+  if (!queryObj.$and) {
+    queryObj.$and = []
+  }
+
+  if (Array.isArray(queriesToBeAdded)) {
+    const populatedQueries = queriesToBeAdded.filter((item) => Object.keys(item).length > 0)
+
+    if (populatedQueries.length >= 0) {
+      queryObj.$and.push(...populatedQueries)
+    }
+  } else {
+    if (Object.keys(queriesToBeAdded).length > 0) {
+      queryObj.$and.push(queriesToBeAdded)
+    }
+  }
+
+  // because we can't have an empty $and/$or/$nor array in mongo db query object. If it's empty we just delete it.
+  if (queryObj.$and?.length === 0) delete queryObj.$and
+}
 
 // Property Filters Generator
 const generatePropertiesFilters = async () => {
