@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react"
 import Search from "../components/Search"
 import Filters from "../components/Filters"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { customFetch } from "../utils"
+import { createUrlParams, customFetch } from "../utils"
 import RequireAuth from "../components/RequireAuth"
 import { useDispatch, useSelector } from "react-redux"
 import { setServerFilters, usePropertyState } from "../redux/propertySlice"
@@ -42,7 +42,7 @@ import Property from "../components/Property"
 const Properties = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const searchRef = useRef()
-  // console.log(searchRef.current && searchRef.current.value)
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value)
   }
@@ -54,7 +54,8 @@ const Properties = () => {
   const { data, isFetching, error } = useQuery({
     queryKey: ["properties", selectedFilters],
     queryFn: async () => {
-      const { data } = await customFetch("properties")
+      let urlParams = createUrlParams(selectedFilters)
+      const { data } = await customFetch(`properties?${urlParams}`)
       return data.data
     },
   })
