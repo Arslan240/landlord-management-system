@@ -26,7 +26,7 @@ import { toast } from "react-toastify"
 const MANUAL = "MANUAL"
 const SLIDER = "SLIDER"
 
-const Dropdown = ({ name, min = 0, max = 700 }) => {
+const Dropdown = ({ name, min = 0, max = 700, selected, setSelected, isReset, setIsReset }) => {
   const dispatch = useDispatch()
   const [type, setType] = useState(null)
   // text input
@@ -55,6 +55,7 @@ const Dropdown = ({ name, min = 0, max = 700 }) => {
     }
     setManualEntry(Number(value))
     setType(MANUAL)
+    setSelected(true)
   }
 
   // to properly updated tooltips
@@ -66,6 +67,7 @@ const Dropdown = ({ name, min = 0, max = 700 }) => {
   const handleChangeComplete = (values) => {
     setSelectedSliderValues(values)
     setType(SLIDER)
+    setSelected(true)
   }
 
   console.log(manualEntry, selectedSliderValues)
@@ -86,6 +88,18 @@ const Dropdown = ({ name, min = 0, max = 700 }) => {
       debouncedFilter(name, { min: sliderValues[0], max: sliderValues[1] })
     }
   }, [type, manualEntry, sliderValues])
+
+  // reset state values when filter is reset
+  useEffect(() => {
+    if (isReset) {
+      setManualEntry(null)
+      setSliderValues([min, max])
+      setType(null)
+      setSelected(false)
+      entryRef.current.value = null
+      setIsReset(false)
+    }
+  }, [isReset])
 
   return (
     <ul tabIndex={0} id="dropdown" className=" menu dropdown-content rounded-md z-[1] w-52 p-1.5 shadow bg-primary-lightest">
