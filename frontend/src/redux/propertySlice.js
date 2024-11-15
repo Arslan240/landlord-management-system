@@ -48,7 +48,7 @@ const propertySlice = createSlice({
   },
 })
 
-export const { setFilters, setServerFilters, setServerFiltersAndProperties } = propertySlice.actions
+export const { setFilters, setServerFilters, resetFilters } = propertySlice.actions
 
 export const usePropertyState = () => useSelector((state) => state.propertyState)
 
