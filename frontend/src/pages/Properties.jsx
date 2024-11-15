@@ -5,10 +5,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { createUrlParams, customFetch } from "../utils"
 import RequireAuth from "../components/RequireAuth"
 import { useDispatch, useSelector } from "react-redux"
-import { setServerFilters, usePropertyState } from "../redux/propertySlice"
+import { setServerFilters, usePropertyState, resetFilters } from "../redux/propertySlice"
 import Loading from "../components/Loading"
 import Property from "../components/Property"
 
+// update these comments to explain actual functionality of how states and filters are being managed.
 // first we'll have only serverFilters and selectedFilters in propertySlice.
 // serverFilters will have an initialState with all the filters so that we don't get those empty box where name is not available when the states are fetched. Maybe it'll not happen this time because selectedFilters will have localState which will then be persisted to redux.
 // selectedFilters be empty at first.
@@ -24,20 +25,6 @@ import Property from "../components/Property"
 // if value is written in input area, then we set min to that value and max to "".
 // if value is selected using slider, we override min and max both with new values.
 // now our selectedFilters have lets say adequate values. Now we got to params object creation from filters.
-// PARAMS OBJECT
-// we iterate over selectedFilters and look for min and max values. First if max is "", we use filter sign of '=' for that attribute
-// if max is not "", we check both max and min, and then we setup >= for min and <= for max value.
-// on the backend we'll also need to update our query object based on this. refer to john smilga node course. maybe in ecommerce api project.
-
-// still not used anywhere. I thought to create filters object here and render based on this. but maybe not.
-// we'll get filters for each data route from server eventually
-
-// first of all setup react query and then we'll be able to determine at which level we need what and will react query be able to fetch data
-// just setup a simple properties context here
-// inside filters component setup filter config with filter handler which updates state in the context
-// iterate over values in filterconfig to render single filters
-// inside single filter use filter handler to update filter value.
-//
 
 const Properties = () => {
   const [searchTerm, setSearchTerm] = useState("")
@@ -82,14 +69,16 @@ const Properties = () => {
         <div>
           <Search placeholder={"Search properties"} changeHandler={handleSearch} />
         </div>
-        <Filters serverFilters={serverFilters} />
+        <Filters serverFilters={serverFilters} resetFilters={resetFilters} />
       </div>
       {/* <p>hello</p> */}
       {isFetching && <Loading />}
       {/* <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-fit place-items-center"> */}
       {/* <section className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4"> */} {/** for complete auto grow do 250px,1fr */}
       <section className="grid grid-cols-[repeat(auto-fit,minmax(200px,280px))] gap-4 justify-center">
-        {!isFetching && properties && properties.map((item) => <Property key={item._id} {...item} />)}
+        {!isFetching && properties?.length > 0
+          ? properties.map((item) => <Property key={item._id} {...item} />)
+          : !isFetching && <h1 className="text-2xl mt-16">No properties available</h1>}
       </section>
     </section>
   )
