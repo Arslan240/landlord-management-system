@@ -20,6 +20,7 @@ import { action as verifyAction } from "./pages/VerifyEmail"
 import { store } from "./redux/store"
 import Dashboard from "./pages/Dashboard"
 import Properties from "./pages/Properties"
+import SingleProperty from "./pages/SingleProperty"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
           {
             path: "properties",
             element: <Properties />,
+          },
+          {
+            path: "properties/:id",
+            element: <SingleProperty />,
           },
         ],
       },
