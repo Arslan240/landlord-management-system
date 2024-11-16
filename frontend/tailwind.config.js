@@ -16,6 +16,7 @@ export default {
           light: "#999BA6",
           lightest: "#EBEFF3",
           hover: "#d9d9dc",
+          hoverlight: "#f8fafc",
           backg: "#f9fafb",
         },
         secondary: {
