@@ -15,12 +15,16 @@ const initialState = {
     garage: { index: 5, name: "garage" },
   },
   selectedFilters: {},
+  searchTerm: "",
 }
 
 const propertySlice = createSlice({
   name: "properties",
   initialState: initialState,
   reducers: {
+    setSearchTerm: (state, action) => {
+      state.searchTerm = action.payload
+    },
     // updated setFilters
     setFilters: (state, action) => {
       const { name, ...rest } = action.payload //it'll receive min and max value, it might need to be changed later. if max is undefined from action.payload, then delete it from the state.selectedFilters[name]. if max is present then min and max both should be present. just pass them along using rest.
@@ -48,7 +52,7 @@ const propertySlice = createSlice({
   },
 })
 
-export const { setFilters, setServerFilters, resetFilters } = propertySlice.actions
+export const { setFilters, setServerFilters, resetFilters, setSearchTerm } = propertySlice.actions
 
 export const usePropertyState = () => useSelector((state) => state.propertyState)
 

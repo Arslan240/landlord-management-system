@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { createUrlParams, customFetch } from "../utils"
 import RequireAuth from "../components/RequireAuth"
 import { useDispatch, useSelector } from "react-redux"
-import { setServerFilters, usePropertyState, resetFilters } from "../redux/propertySlice"
+import { setServerFilters, usePropertyState, resetFilters, setSearchTerm } from "../redux/propertySlice"
 import Loading from "../components/Loading"
 import Property from "../components/PropertyRenderer"
 import { times } from "lodash"
@@ -38,24 +38,24 @@ const Properties = () => {
   const location = useLocation()
   const [isSmall, setIsSmall] = useState(false)
   const [pagination, setPagination] = useState(null)
-  const [searchTerm, setSearchTerm] = useState("")
   const searchRef = useRef()
 
   //
   const [view, setView] = useState(LISTVIEW)
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value)
+  const searchHandler = (e) => {
+    e.preventDefault()
+    dispatch(setSearchTerm(searchRef.current.value))
   }
 
   // redux
   const dispatch = useDispatch()
-  const { selectedFilters, serverFilters } = usePropertyState()
+  const { selectedFilters, serverFilters, searchTerm } = usePropertyState()
   // react query
   const { data, isFetching, error } = useQuery({
-    queryKey: ["properties", selectedFilters],
+    queryKey: ["properties", searchTerm, selectedFilters],
     queryFn: async () => {
-      let urlParams = createUrlParams(selectedFilters)
+      let urlParams = createUrlParams(selectedFilters, searchTerm)
       const { data } = await customFetch(`properties?${urlParams}`)
       return data
     },
@@ -135,9 +135,9 @@ const Properties = () => {
       </div>
       {/* search and filters */}
       <div className="flex flex-col lg:flex-row justify-between py-3 gap-5">
-        <div>
-          <Search placeholder={"Search properties"} changeHandler={handleSearch} />
-        </div>
+        <form onSubmit={searchHandler}>
+          <Search placeholder={"Search properties"} ref={searchRef} />
+        </form>
         <Filters serverFilters={serverFilters} resetFilters={resetFilters} />
       </div>
       {isFetching && <Loading />}
