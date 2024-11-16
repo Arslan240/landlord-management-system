@@ -11,10 +11,8 @@ const getAllProperties = async (req, res) => {
   if (!user) {
     throw new UnAuthorizedError("You're not authorized access this resource")
   }
-  console.log(req.query)
-  const { search, beds, baths, garage, rent, sqft, year } = req.query
+  // console.log(req.query)
 
-  // when there is a search term from search box, its for this. only searches across text based details.
   const query = { owner: userId }
 
   generateDBQuery(req.query, query)
@@ -135,6 +133,7 @@ const generateDBQuery = (queryParams, query) => {
     year_min, year_max, 
     garage_min, garage_max } = queryParams
 
+  // when there is a search term from search box, its for this. only searches across text based details.
   const textSearchConditions = [
     { "address.plotNo": { $regex: search, $options: "i" } },
     { "address.city": { $regex: search, $options: "i" } },
@@ -194,7 +193,7 @@ const generateDBQuery = (queryParams, query) => {
 
   // it passes all the created queryObjects to function to create a $and array of them.
   addTo$ANDQuery([rentQuery, sqftQuery, bedsQuery, bathsQuery, yearQuery, garageQuery], query)
-  console.log(query)
+  // console.log(query)
   return query
 }
 
