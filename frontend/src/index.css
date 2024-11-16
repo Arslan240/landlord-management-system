@@ -2,21 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   font-family: "Inter", sans-serif;
 }
 
 body {
-  font-size: 1.rem;
+  font-size: 1rem;
   color: rgb(44, 44, 44);
 }
 
-@layer components{
-  .padding{
-    @apply px-5
+@layer components {
+  .padding {
+    @apply px-5;
   }
 
-  .dashboard-outlet{
-    @apply pb-5 pt-3
+  .dashboard-outlet {
+    @apply pb-5 pt-3;
   }
+}
+
+table tr:first-child th:first-child {
+  border-top-left-radius: 6px;
+}
+
+/* top-right border-radius */
+table tr:first-child th:last-child {
+  border-top-right-radius: 6px;
+}
+
+/* bottom-left border-radius */
+table tr:last-child td:first-child {
+  border-bottom-left-radius: 6px;
+}
+
+/* bottom-right border-radius */
+table tr:last-child td:last-child {
+  border-bottom-right-radius: 6px;
 }
