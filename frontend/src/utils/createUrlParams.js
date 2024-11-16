@@ -1,5 +1,8 @@
-const createUrlParams = (selectedFilters) => {
+const createUrlParams = (selectedFilters, searchTerm) => {
   let paramsStr = ""
+  if (searchTerm) {
+    paramsStr += `search=${searchTerm}`
+  }
   Object.keys(selectedFilters).forEach((key) => {
     const { min, max } = selectedFilters[key]
     console.log("function run")
