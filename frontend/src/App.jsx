@@ -23,7 +23,7 @@ import Properties from "./pages/Properties"
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: {},
+    queries: { refetchOnWindowFocus: false },
   },
 })
 
