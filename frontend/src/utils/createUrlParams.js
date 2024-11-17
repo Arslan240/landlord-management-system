@@ -1,5 +1,6 @@
-const createUrlParams = (selectedFilters, searchTerm) => {
+const createUrlParams = (selectedFilters, searchTerm, page) => {
   let paramsStr = ""
+
   if (searchTerm) {
     paramsStr += `search=${searchTerm}`
   }
@@ -15,6 +16,12 @@ const createUrlParams = (selectedFilters, searchTerm) => {
       paramsStr += `${key}_max=${max}`
     }
   })
+
+  if (page) {
+    if (paramsStr.length > 0) paramsStr += "&"
+    paramsStr += `page=${page}`
+  }
+  console.log(paramsStr)
   return paramsStr
 }
 

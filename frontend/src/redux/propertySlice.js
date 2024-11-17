@@ -16,6 +16,7 @@ const initialState = {
   },
   selectedFilters: {},
   searchTerm: "",
+  page: 1,
 }
 
 const propertySlice = createSlice({
@@ -49,10 +50,13 @@ const propertySlice = createSlice({
     resetFilters: (state, action) => {
       state.selectedFilters = {}
     },
+    setPage: (state, action) => {
+      state.page = action.payload
+    },
   },
 })
 
-export const { setFilters, setServerFilters, resetFilters, setSearchTerm } = propertySlice.actions
+export const { setFilters, setServerFilters, resetFilters, setSearchTerm, setPage } = propertySlice.actions
 
 export const usePropertyState = () => useSelector((state) => state.propertyState)
 
