@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { createUrlParams, customFetch } from "../utils"
 import RequireAuth from "../components/RequireAuth"
 import { useDispatch, useSelector } from "react-redux"
-import { setServerFilters, usePropertyState, resetFilters, setSearchTerm } from "../redux/propertySlice"
+import { setServerFilters, usePropertyState, resetFilters, setSearchTerm, setPage } from "../redux/propertySlice"
 import Loading from "../components/Loading"
 import Property from "../components/PropertyRenderer"
 import { times } from "lodash"
@@ -13,6 +13,7 @@ import { LayoutGrid, List, Plus } from "lucide-react"
 import { Link, useLocation, useOutletContext } from "react-router-dom"
 import { GRIDVIEW, LISTVIEW } from "../constants"
 import PropertyRenderer from "../components/PropertyRenderer"
+import PaginationContainer from "../components/PaginationContainer"
 
 // update these comments to explain actual functionality of how states and filters are being managed.
 // first we'll have only serverFilters and selectedFilters in propertySlice.
@@ -50,12 +51,12 @@ const Properties = () => {
 
   // redux
   const dispatch = useDispatch()
-  const { selectedFilters, serverFilters, searchTerm } = usePropertyState()
+  const { selectedFilters, serverFilters, searchTerm, page } = usePropertyState()
   // react query
   const { data, isFetching, error } = useQuery({
-    queryKey: ["properties", searchTerm, selectedFilters],
+    queryKey: ["properties", searchTerm, selectedFilters, page],
     queryFn: async () => {
-      let urlParams = createUrlParams(selectedFilters, searchTerm)
+      let urlParams = createUrlParams(selectedFilters, searchTerm, page)
       const { data } = await customFetch(`properties?${urlParams}`)
       return data
     },
@@ -151,15 +152,7 @@ const Properties = () => {
           !isFetching && <h1 className="text-2xl mt-16">No properties available</h1>
         )}
       </section>
-      {/* pagination */}
-      {/* <div className="join">
-        <button className="join-item btn active:btn-secondary">Prev</button>
-        {pagination &&
-          times(pagination?.pageCount, (number) => {
-            return <button className="join-item btn active:btn-secondary">{number + 1}</button>
-          })}
-        <button className="join-item btn active:btn-secondary">Next</button>
-      </div> */}
+      <PaginationContainer isFetching={isFetching} pageAction={setPage} pagination={pagination} properties={properties} />
     </section>
   )
 }
