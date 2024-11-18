@@ -4,7 +4,7 @@ import { toast } from "react-toastify"
 
 // selectedFilters are part of key for react query.
 // so they only update when some values from filters are selected
-
+const DEFAULTPAGE = 1
 const initialState = {
   serverFilters: {
     rent: { index: 0, name: "rent" },
@@ -16,7 +16,7 @@ const initialState = {
   },
   selectedFilters: {},
   searchTerm: "",
-  page: 1,
+  page: DEFAULTPAGE,
 }
 
 const propertySlice = createSlice({
@@ -25,10 +25,10 @@ const propertySlice = createSlice({
   reducers: {
     setSearchTerm: (state, action) => {
       state.searchTerm = action.payload
+      state.page = DEFAULTPAGE
     },
-    // updated setFilters
     setFilters: (state, action) => {
-      const { name, ...rest } = action.payload //it'll receive min and max value, it might need to be changed later. if max is undefined from action.payload, then delete it from the state.selectedFilters[name]. if max is present then min and max both should be present. just pass them along using rest.
+      const { name, ...rest } = action.payload //it can receive only min, and both min and max as well, server handles it.
 
       if (!name) {
         toast.error("Provide both name and value in redux")
@@ -41,6 +41,7 @@ const propertySlice = createSlice({
           ...rest,
         },
       }
+      state.page = DEFAULTPAGE
       console.log(action.payload)
     },
     // figure out a way, how to maintain selected value state when a new request is made. maybe before storing filters, check if selected value is present then use that. And based on that update styles properly.
@@ -49,6 +50,7 @@ const propertySlice = createSlice({
     },
     resetFilters: (state, action) => {
       state.selectedFilters = {}
+      state.page = DEFAULTPAGE // page is in state so it's added to url params, on new filters, page should be 1 to get all data.
     },
     setPage: (state, action) => {
       state.page = action.payload
