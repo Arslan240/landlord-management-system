@@ -21,6 +21,7 @@ import { store } from "./redux/store"
 import Dashboard from "./pages/Dashboard"
 import Properties from "./pages/Properties"
 import SingleProperty from "./pages/SingleProperty"
+import AddProperty from "./pages/AddProperty"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,7 +41,7 @@ const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <Dashboard />,
+        element: <Dashboard />, //here we can also set outlet page wrapper and then show dashboard in index child in children array
         children: [
           {
             path: "properties",
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
           {
             path: "properties/:id",
             element: <SingleProperty />,
+          },
+          {
+            path: "properties/add-property",
+            element: <AddProperty />,
           },
         ],
       },
