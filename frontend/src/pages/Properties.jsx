@@ -14,6 +14,7 @@ import { Link, useLocation, useOutletContext } from "react-router-dom"
 import { GRIDVIEW, LISTVIEW } from "../constants"
 import PropertyRenderer from "../components/PropertyRenderer"
 import PaginationContainer from "../components/PaginationContainer"
+import OutletPageWrapper from "../components/OutletPageWrapper"
 
 // update these comments to explain actual functionality of how states and filters are being managed.
 // first we'll have only serverFilters and selectedFilters in propertySlice.
@@ -92,7 +93,7 @@ const Properties = () => {
   console.log("Property State: ", usePropertyState())
 
   return (
-    <section className="pb-5">
+    <OutletPageWrapper showTitle={false}>
       <div className="flex justify-between items-center">
         <h1 className="capitalize text-3xl font-semibold">properties</h1>
         {/* Grid and List view Icons */}
@@ -153,7 +154,7 @@ const Properties = () => {
         )}
       </section>
       <PaginationContainer isFetching={isFetching} pageAction={setPage} pagination={pagination} properties={properties} />
-    </section>
+    </OutletPageWrapper>
   )
 }
 export default RequireAuth(Properties)
