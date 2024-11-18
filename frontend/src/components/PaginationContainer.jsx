@@ -3,6 +3,7 @@ import React from "react"
 import { useDispatch } from "react-redux"
 import { useLocation } from "react-router-dom"
 
+// TODO: still a lot of work needed to make it similar to complex pagination with 10s and 100s of pages.
 const PaginationContainer = ({ isFetching, properties, pagination, pageAction }) => {
   if (!pagination) return null
 
