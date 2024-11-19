@@ -4,30 +4,33 @@ require("express-async-errors")
 const express = require("express")
 const { connect } = require("./db/connect")
 const app = express()
-const cors = require('cors')
+const cors = require("cors")
 const cookieParser = require("cookie-parser")
 const morgan = require("morgan")
 
-
-
 // rouers
 const authRouter = require("./routes/auth.routes")
-const propertyRouter = require('./routes/property.routes')
+const propertyRouter = require("./routes/property.routes")
+const uploadRouter = require("./routes/upload.routes")
 const errorHandlerMiddleware = require("./middlewares/error-handler.middleware")
 const notFoundMiddleware = require("./middlewares/notFoundMiddleware")
 
+// TODO: remove 5174 after development
 // middleware
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}))
-app.use(morgan('tiny'))
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    credentials: true,
+  })
+)
+app.use(morgan("tiny"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser(process.env.PRIVATE_KEY))
 
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/properties", propertyRouter)
+app.use("/api/v1/upload", uploadRouter)
 
 // app.use("/", (req, res) => {
 //   res.send("<h2>Hello</h2>")
