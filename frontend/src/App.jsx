@@ -1,5 +1,4 @@
 // src/App.jsx
-import "preline" // Import to ensure JS behaviors work
 import React from "react"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
