@@ -38,7 +38,7 @@ const strokeWidth = "1.75"
 
 const Properties = () => {
   const location = useLocation()
-  const [isSmall, setIsSmall] = useState(false)
+  const [isSmall, setIsSmall] = useState(true)
   const [pagination, setPagination] = useState(null)
   const searchRef = useRef()
 
@@ -93,7 +93,7 @@ const Properties = () => {
   console.log("Property State: ", usePropertyState())
 
   return (
-    <OutletPageWrapper showTitle={false}>
+    <OutletPageWrapper title={false}>
       <div className="flex justify-between items-center">
         <h1 className="capitalize text-3xl font-semibold">properties</h1>
         {/* Grid and List view Icons */}
