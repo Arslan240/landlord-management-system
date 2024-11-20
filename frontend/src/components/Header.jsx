@@ -8,17 +8,14 @@ import Profile from "./Profile"
 
 const Header = () => {
   return (
-    <nav className="navbar bg-indigo-50 padding max-h-10">
+    <nav className="navbar bg-indigo-50 padding max-h-3 min-h-14">
       <div className="flex justify-between  w-full">
-        <Search header placeholder={'Enter search term'} />
+        <Search header placeholder={"Enter search term"} />
         <div className="flex gap-4 ">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle hover:bg-primary-hover">
-
             <div className="indicator">
               <Bell />
-              <div className="badge badge-sm indicator-item rounded-full px-1 py-0.5 text-[.7rem]">
-                28
-              </div>
+              <div className="badge badge-sm indicator-item rounded-full px-1 py-0.5 text-[.7rem]">28</div>
             </div>
           </div>
           <Profile />
@@ -28,4 +25,3 @@ const Header = () => {
   )
 }
 export default Header
-

@@ -3,11 +3,11 @@ import { forwardRef } from "react"
 
 const Search = forwardRef(({ classNames, placeholder, header = false, changeHandler }, ref) => {
   return (
-    <div className={` space-y-3 ${classNames}`}>
+    <div className={`${classNames}`}>
       <div className="relative">
         <input
           type="text"
-          className={`peer py-3 px-4 ps-11 block w-full  border-transparent ${
+          className={`peer py-2 px-4 ps-11 block w-full  border-transparent ${
             !header && "bg-primary-lightest"
           } rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none`}
           placeholder={placeholder}
