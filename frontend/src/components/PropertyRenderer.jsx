@@ -14,7 +14,7 @@ import React from "react"
 const PropertyRenderer = ({ viewType, properties }) => {
   if (viewType === LISTVIEW) {
     return (
-      <div className="overflow-x-auto p-4 ">
+      <div className="overflow-x-auto pt-2 pb-2 ">
         <table className="table-auto rounded-lg w-full text-left shadow-md">
           {/* Table Head */}
           <thead>
