@@ -13,6 +13,7 @@ function Dropzone({
   maxFiles,
   maxSizeMessage,
   maxFilesMessage,
+  error,
 }) {
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
     setAcceptedFiles((prevFiles) => [...prevFiles, ...acceptedFiles.map((file) => Object.assign(file, { preview: URL.createObjectURL(file) }))]) //we are creating a new property of preview containing url of it to show in browser later.
@@ -63,11 +64,11 @@ function Dropzone({
       </div>
       {/* PREVIEW UPLOADED FILES */}
       <div>
-        <div className="flex flex-col gap-2 sm:flex-row justify-between text-[0.79rem] text-slate-700 leading-4">
+        <div className="flex flex-col gap-2 justify-between text-[0.79rem] text-slate-700 leading-4">
           {acceptedFiles.length > 0 && (
             <>
               <h2 className="pb-1 text-xl font-semibold">Preview</h2>
-              <p>Hero image is selected, double click to select a different image for property.</p>
+              <p>Hero image is selected, click to select a different image for property.</p>
               <button className="btn text-slate-50 px-4 btn-xs btn-warning " onClick={resetFiles}>
                 Reset
               </button>
@@ -83,7 +84,7 @@ function Dropzone({
                     src={file.preview}
                     alt={file.name}
                     className={`w-24 h-24 rounded-xl cursor-pointer object-cover ${file.name === heroImage && "border-secondary border-2"}`}
-                    onDoubleClick={() => handleHeroImage(file.name)}
+                    onClick={() => handleHeroImage(file.name)}
                     onLoad={() => URL.revokeObjectURL(file.preview)}
                   />
                   <button
@@ -98,6 +99,7 @@ function Dropzone({
           )}
         </div>
       </div>
+      <div>{error && <p className="text-warning py-1">{error.message}</p>}</div>
     </div>
   )
 }
