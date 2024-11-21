@@ -78,12 +78,21 @@ const PropertyDetailsForm = ({ variants, custom }) => {
           />
         </div>
         <FormInput
+          name={"rent"}
+          label="$ Rent"
+          type={"text"}
+          small
+          placeholder={"$ 359.99"}
+          flexChild
+          {...register("rent", { required: "Rent is required" })}
+          error={errors.rent}
+        />
+        <FormInput
           name={"yearBuilt"}
           label="Built in (Year)"
           type={"text"}
           small
           placeholder={"19XX"}
-          flexChild
           {...register("yearBuilt", { required: "Building in year is required" })}
           error={errors.yearBuilt}
         />
