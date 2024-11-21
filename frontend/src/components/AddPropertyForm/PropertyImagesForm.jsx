@@ -1,0 +1,140 @@
+import { motion } from "motion/react"
+import { useState } from "react"
+import axios from "axios"
+import Dropzone from "../Dropzone"
+import { useAddPropertyContext } from "../../pages/AddProperty"
+import { useForm } from "react-hook-form"
+import { useEffect } from "react"
+import { toast } from "react-toastify"
+import { customFetch, getObjectKeyFromS3Url } from "../../utils"
+
+const minImagesNo = 2
+const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
+  const [acceptedFiles, setAcceptedFiles] = useState([])
+  const [heroImage, setHeroImage] = useState("")
+
+  const {
+    step,
+    totalSteps,
+    onSubmit,
+    DURATION,
+    handleNext,
+    handlePrev,
+    formState,
+    mediaUploaded,
+    appendS3ObjectIds,
+    formCompleted,
+    setFormCompleted,
+    setMediaUploaded,
+  } = useAddPropertyContext()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitSuccessful },
+  } = useForm({ defaultValues, mode: "onBlur" }) //triggers validation on onBlur (focus lost)
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      console.log("successfull submit")
+      handleNext()
+    }
+  }, [isSubmitSuccessful])
+
+  const submitHandler = () => {
+    if (acceptedFiles.length < minImagesNo) {
+      toast.error(`Upload at least ${minImagesNo} images`)
+      return
+    }
+    onSubmit({ media: acceptedFiles }, step)
+    setFormCompleted(true)
+  }
+
+  const getPresignedUrls = async (fileNames) => {
+    try {
+      const { data } = await customFetch.post("upload/getsignedurls", {
+        fileNames,
+      })
+      return data?.urls
+    } catch (error) {
+      toast.error(error.message)
+      throw error
+    }
+  }
+
+  const uploadFilesToS3 = async (urls, files) => {
+    try {
+      const promisesArr = urls.map((url, index) => {
+        return axios.put(url, files[index], { headers: { "Content-Type": "multipart/form-data" } })
+      })
+
+      let resp = await Promise.all(promisesArr)
+      const data = resp.map(({ config }) => config?.url.split("?")[0])
+      return data
+    } catch (error) {
+      toast.error(`There was an error in uploading files to s3\n ${error.message}`)
+      throw error
+    }
+  }
+
+  useEffect(() => {
+    const uploadMedia = async () => {
+      console.log("media upload called")
+      if (formCompleted && !mediaUploaded) {
+        const { media } = formState.step3
+
+        if (!media || media?.length <= 0) {
+          toast.error("No media files attached")
+          return
+        }
+        try {
+          const files = formState.step3?.media
+
+          // get presigned s3 urls from server
+          const fileNames = media.map((file) => file.name)
+          const preSignedUrls = await getPresignedUrls(fileNames)
+          console.log("presigned urls: ", preSignedUrls)
+
+          // upload files to s3
+          const uploadedUrls = await uploadFilesToS3(preSignedUrls, files)
+          const objectIds = uploadedUrls.map((url) => getObjectKeyFromS3Url(url))
+          console.log("files uploaded resp", uploadedUrls)
+          console.log("objectIds", objectIds)
+
+          // append object ids to files array in step 3
+          appendS3ObjectIds(objectIds)
+
+          // set media upload completed
+          setMediaUploaded(true)
+        } catch (error) {
+          console.log("Error in uploading Files", error.message)
+        }
+      } else if (mediaUploaded) {
+        toast.warning("Media is already uploaded")
+      }
+    }
+
+    uploadMedia()
+  }, [formCompleted])
+
+  return (
+    <motion.div variants={variants} initial="hidden" animate="visible" exit="exit" transition={{ duration: DURATION }}>
+      <form onSubmit={handleSubmit(() => submitHandler())}>
+        <Dropzone acceptedFiles={acceptedFiles} setAcceptedFiles={setAcceptedFiles} heroImage={heroImage} setHeroImage={setHeroImage} />
+        <button type="submit" className="btn btn-secondary btn-sm text-white">
+          Submit
+        </button>
+      </form>
+      <div className="mx-auto pt-3 flex gap-2 place-content-end">
+        <button className="btn btn-secondary btn-md disabled:border-primary-light disabled:opacity-50" disabled={step === 1} onClick={handlePrev}>
+          Prev
+        </button>
+        <button type="submit" className="btn btn-secondary btn-md disabled:border-primary-light disabled:opacity-50" disabled={step === totalSteps}>
+          Next
+        </button>
+      </div>
+    </motion.div>
+  )
+}
+
+export default PropertyImagesForm
