@@ -1,8 +1,9 @@
 import { forwardRef } from "react"
 
 const FormInput = forwardRef(
-  ({ label, type, placeholder, name, disabled, rightLabel, dropdown = false, flexChild = false, small, labelIcon, ...rest }, ref) => {
+  ({ label, type, placeholder, name, disabled, rightLabel, dropdown = false, flexChild = false, small, labelIcon, error, ...rest }, ref) => {
     const padding = !dropdown ? `p-[0.6rem]` : `p-4`
+    // console.log(error)
     return (
       <>
         <div className={`w-full ${!flexChild && "my-3"}`}>
@@ -15,26 +16,25 @@ const FormInput = forwardRef(
                     {labelIcon}
                   </div>
                 ) : (
-                  label
+                  <>{label}</>
                 )}
               </label>
               <span className="block mb-2 text-sm text-gray-500 ">{rightLabel}</span>
             </div>
           )}
           {/* {type === "select" && <SelectInput options={options} padding={padding} small={small} />} */}
-          {type !== "select" && (
-            <input
-              name={name}
-              type={type}
-              ref={ref}
-              className={`${padding} block w-full border-gray-200 rounded-lg text-sm focus:border-secondary focus:ring-border-secondary disabled:opacity-50 disabled:pointer-events-none ${
-                small && "text-[0.8rem]"
-              }`}
-              disabled={disabled}
-              placeholder={placeholder}
-              {...rest}
-            />
-          )}
+          <input
+            name={name}
+            type={type}
+            ref={ref}
+            className={`${padding} block w-full border-gray-200 rounded-lg text-sm focus:border-secondary focus:ring-border-secondary disabled:opacity-50 disabled:pointer-events-none ${
+              error && "border-[1px] border-warning"
+            } ${small && "text-[0.8rem]"}`}
+            disabled={disabled}
+            placeholder={placeholder}
+            {...rest}
+          />
+          {error && <p className="text-warning py-1">{error.message}</p>}
         </div>
       </>
     )
@@ -57,7 +57,7 @@ export const SelectInput = ({ label, rightLabel, options, padding, small, flexCh
       <select className={`p-[0.6rem] select select-bordered w-full ${small && "text-[0.8rem]"}`}>
         <option disabled>Pick one</option>
         {options.map((option, index) => (
-          <option className="capitalize" value={option.toLowerCase()} selected={index === selected}>
+          <option className="capitalize" key={index} value={option.toLowerCase()} selected={index === selected}>
             {option}
           </option>
         ))}
