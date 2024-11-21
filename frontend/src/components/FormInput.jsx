@@ -42,7 +42,7 @@ const FormInput = forwardRef(
 )
 export default FormInput
 
-export const SelectInput = ({ label, rightLabel, options, padding, small, flexChild = false, selected }) => {
+export const SelectInput = ({ label, rightLabel, options, padding, small, flexChild = false, selected, error, ...rest }) => {
   // const padding = !dropdown ? `p-[0.6rem]` : `p-4`
   return (
     <div className={`w-full ${!flexChild && "my-3"}`}>
@@ -54,7 +54,7 @@ export const SelectInput = ({ label, rightLabel, options, padding, small, flexCh
           {rightLabel && <span className="block mb-2 text-sm text-gray-500 ">{rightLabel}</span>}
         </div>
       )}
-      <select className={`p-[0.6rem] select select-bordered w-full ${small && "text-[0.8rem]"}`}>
+      <select className={`p-[0.6rem] select select-bordered w-full ${small && "text-[0.8rem]"}`} {...rest}>
         <option disabled>Pick one</option>
         {options.map((option, index) => (
           <option className="capitalize" key={index} value={option.toLowerCase()} selected={index === selected}>
@@ -62,6 +62,7 @@ export const SelectInput = ({ label, rightLabel, options, padding, small, flexCh
           </option>
         ))}
       </select>
+      {error && <p className="text-warning py-1">{error.message}</p>}
     </div>
   )
 }
