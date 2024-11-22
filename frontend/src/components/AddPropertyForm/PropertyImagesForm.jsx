@@ -58,7 +58,8 @@ const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
       })
       return data?.urls
     } catch (error) {
-      toast.error(error.message)
+      console.log(error.message)
+      toast.error("Error in getting presigned urls.")
       throw error
     }
   }
@@ -66,7 +67,7 @@ const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
   const uploadFilesToS3 = async (urls, files) => {
     try {
       const promisesArr = urls.map((url, index) => {
-        return axios.put(url, files[index], { headers: { "Content-Type": "multipart/form-data" } })
+        return axios.put(url, files[index], { headers: { "Content-Type": files[index].type || "image/*" } })
       })
 
       let resp = await Promise.all(promisesArr)
@@ -78,6 +79,8 @@ const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
     }
   }
 
+  // TODO: bug: when media upload/getting presigned url fails, if user clicks submit again, as formCompleted is already true so this useEffect doesn't rerun. Gotta figure out this bug.
+  // maybe setup a error state, for which you change its state from previous one so that the useEffect can run again. IDK maybe
   useEffect(() => {
     const uploadMedia = async () => {
       console.log("media upload called")
@@ -94,7 +97,7 @@ const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
           const files = formState.step3?.media
 
           // get presigned s3 urls from server
-          const fileNames = media.map((file) => file.name)
+          const fileNames = media.map((file) => ({ name: file.name, fileType: file.type }))
           const preSignedUrls = await getPresignedUrls(fileNames)
           console.log("presigned urls: ", preSignedUrls)
 
@@ -108,7 +111,10 @@ const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
           appendS3ObjectIds(objectIds)
 
           // set media upload completed
-          setMediaUploaded(true)
+          setMediaUploaded(() => {
+            toast.success("media uploaded reached")
+            return true
+          })
         } catch (error) {
           console.log("Error in uploading Files", error.message)
           // because toast is initialized inside try block we must complete it by setting isLoading false. If we just do toast.error(), a new toast will be created and loading toast will stay there.

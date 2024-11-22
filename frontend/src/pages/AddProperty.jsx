@@ -68,6 +68,7 @@ const AddProperty = () => {
 
   console.log("formState", formState)
   console.log("form completion", formCompleted)
+  console.log("Media uploaded", mediaUploaded)
 
   const onSubmit = (data, step) => {
     console.log(data)
