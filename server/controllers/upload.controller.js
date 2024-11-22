@@ -12,13 +12,15 @@ const getPreSignedUrls = async (req, res) => {
     throw new BadRequestError("Provide at least one filename.")
   }
 
-  const promisesArr = fileNames.map((name) => {
+  const promisesArr = fileNames.map(({ name, fileType }) => {
     const imageKey = randomBytes(16).toString("hex")
-
+    if (!fileType) {
+      throw new BadRequestError("Must provide filetype to get presigned urls")
+    }
     const putCommand = new PutObjectCommand({
       Bucket: bucketName,
       Key: imageKey,
-      ContentType: "multipart/form-data",
+      ContentType: fileType || "image/*",
     })
     return getSignedUrl(s3Client, putCommand)
   })
