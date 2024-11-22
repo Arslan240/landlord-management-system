@@ -1,10 +1,7 @@
 const { UnAuthenticateError, UnAuthorizedError } = require("../errors")
 const { Token } = require("../models/Token.model")
-const {
-  verifyToken,
-  attachCookiesToResponse,
-  refreshAccessToken,
-} = require("../utils/jwt")
+const { createTokenUser } = require("../utils/createTokenUser")
+const { verifyToken, attachCookiesToResponse, refreshAccessToken } = require("../utils/jwt")
 const jwt = require("jsonwebtoken")
 
 const authMiddleware = async (req, res, next) => {
@@ -28,14 +25,17 @@ const authMiddleware = async (req, res, next) => {
       refreshToken,
     })
     if (!existingToken || !existingToken?.isValid) {
-      if (!existingToken?.isValid){
-        console.log('existing token is not valied');
-      }else{
+      if (!existingToken?.isValid) {
+        console.log("existing token is not valied")
+      } else {
         console.log("existing refresh token either absent or invalid")
       }
       console.log(existingToken)
       throw new UnAuthenticateError("Invalid Authentication")
     }
+
+    const tokenUser = createTokenUser(user)
+    req.user = tokenUser
 
     attachCookiesToResponse({
       res,
@@ -50,15 +50,17 @@ const authMiddleware = async (req, res, next) => {
   }
 }
 
-const rolesAuthMiddleware = (...roles) => async (req, res, next) => {
-  // some checks if any one item returns true, then some will return true as well.
-  if (!req.user || !Array.isArray(req.user.role) || !req.user.role.some(role => roles.includes(role))) {
-    throw new UnAuthorizedError('You don\'t have permission to access this route')
+const rolesAuthMiddleware =
+  (...roles) =>
+  async (req, res, next) => {
+    // some checks if any one item returns true, then some will return true as well.
+    if (!req.user || !Array.isArray(req.user.role) || !req.user.role.some((role) => roles.includes(role))) {
+      throw new UnAuthorizedError("You don't have permission to access this route")
+    }
+    next()
   }
-  next()
-}
 
 module.exports = {
   authMiddleware,
-  rolesAuthMiddleware
+  rolesAuthMiddleware,
 }
