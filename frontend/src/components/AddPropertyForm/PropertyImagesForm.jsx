@@ -21,6 +21,7 @@ const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
     handleNext,
     handlePrev,
     formState,
+    toastRef,
     mediaUploaded,
     appendS3ObjectIds,
     formCompleted,
@@ -88,6 +89,8 @@ const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
           return
         }
         try {
+          // TODO: style the toast div properly.
+          toastRef.current = toast.loading("Creating property")
           const files = formState.step3?.media
 
           // get presigned s3 urls from server
@@ -108,6 +111,13 @@ const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
           setMediaUploaded(true)
         } catch (error) {
           console.log("Error in uploading Files", error.message)
+          // because toast is initialized inside try block we must complete it by setting isLoading false. If we just do toast.error(), a new toast will be created and loading toast will stay there.
+          toast.update(toastRef.current, {
+            isLoading: false,
+            type: "error",
+            render: `error.message`,
+            autoClose: 3000,
+          })
         }
       } else if (mediaUploaded) {
         toast.warning("Media is already uploaded")
