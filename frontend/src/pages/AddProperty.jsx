@@ -1,7 +1,13 @@
 import React, { createContext, useCallback, useContext, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import axios from "axios"
 import { AnimatePresence, motion } from "motion/react"
 import OutletPageWrapper from "../components/OutletPageWrapper"
 import { PropertyAddressForm, PropertyDetailsForm, PropertyImagesForm } from "../components/AddPropertyForm"
+import { useEffect } from "react"
+import { toast } from "react-toastify"
+import { capitalize, customFetch } from "../utils"
+import { useRef } from "react"
 
 // label, type, placeholder, disabled, rightLabel, dropdown
 const totalSteps = 3
@@ -36,11 +42,24 @@ const stepVariants = {
   }),
 }
 
+const createProperty = async (property) => {
+  try {
+    const { data } = await customFetch.post("properties", property)
+    return data?.property
+  } catch (error) {
+    throw error
+  }
+}
+
 const AddPropertyContext = createContext()
 
 const AddProperty = () => {
+  const navigate = useNavigate()
+  const toastRef = useRef(null)
   const [step, setStep] = useState(1)
   const [direction, setDirection] = useState(FORWARD) // 1 for forward, -1 for backward
+  const [formCompleted, setFormCompleted] = useState(false)
+  const [mediaUploaded, setMediaUploaded] = useState(false)
   const [formState, setFormState] = useState({
     step1: {},
     step2: {},
@@ -48,10 +67,10 @@ const AddProperty = () => {
   })
 
   console.log("formState", formState)
+  console.log("form completion", formCompleted)
 
   const onSubmit = (data, step) => {
-    console.log("step", step)
-    console.log("on submit called")
+    console.log(data)
     setFormState((prevState) => ({ ...prevState, [`step${step}`]: data }))
   }
 
@@ -70,8 +89,99 @@ const AddProperty = () => {
     }
   }
 
+  const appendS3ObjectIds = (objectIds) => {
+    if (formCompleted) {
+      setFormState((prevState) => {
+        return {
+          ...prevState,
+          step3: {
+            ...prevState.step3,
+            media: prevState.step3.media.map((file, index) => ({
+              ...file,
+              objectId: objectIds[index],
+            })),
+          },
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    const handleCreateProperty = async () => {
+      if (mediaUploaded) {
+        const { name, ...restAddress } = formState.step1
+        const address = {
+          ...restAddress,
+        }
+
+        const { beds, baths, garage, rent, sqft, yearBuilt, available, category, ...rest } = formState.step2
+        const details = {
+          ...rest,
+          beds: Number(beds),
+          baths: Number(baths),
+          garage: Number(garage),
+          rent: Number(rent),
+          sqft: Number(sqft),
+          yearBuilt: Number(yearBuilt),
+        }
+
+        const { media } = formState.step3
+        const images = media.map((file) => file.objectId)
+
+        const property = {
+          name,
+          address,
+          available,
+          category: capitalize(category),
+          details,
+          images,
+        }
+        console.log(property)
+        const createdProperty = await createProperty(property)
+
+        if (!createdProperty) {
+          toast.update(toastRef.current, {
+            render: "There was an error in creating property.",
+            type: "error",
+            isLoading: false,
+            autoClose: 3000,
+          })
+          // toast.error("There was an error in creating property.")
+          return
+        }
+
+        const { _id } = createdProperty
+        toast.update(toastRef.current, {
+          render: "Property created Successfully",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        })
+        // toast.success("Property created Successfully")
+        navigate(`/dashboard/properties/${_id}`)
+      }
+    }
+    handleCreateProperty()
+  }, [mediaUploaded])
+
   return (
-    <AddPropertyContext.Provider value={{ DURATION, formState, step, totalSteps, onSubmit, handleNext, handlePrev }}>
+    <AddPropertyContext.Provider
+      value={{
+        toastRef,
+        DURATION,
+        formState,
+        step,
+        totalSteps,
+        onSubmit,
+        handleNext,
+        handlePrev,
+        formCompleted,
+        mediaUploaded,
+        appendS3ObjectIds,
+        setFormCompleted,
+        setMediaUploaded,
+      }}
+    >
       <OutletPageWrapper title="Add a new Property">
         <div className="max-w-[400px] mx-auto">
           <div className="bg-primary-lightest px-7 py-7 rounded-lg">
@@ -80,22 +190,6 @@ const AddProperty = () => {
               {step === 2 && <PropertyDetailsForm key={"step-2"} custom={direction} variants={stepVariants} defaultValues={formState.step2} />}
               {step === totalSteps && <PropertyImagesForm key={"step-4"} variants={lastStepVariants} defaultValues={formState.step3} />}
             </AnimatePresence>
-            {/* <div className="mx-auto pt-3 flex gap-2 place-content-end">
-              <button
-                className="btn btn-secondary btn-md disabled:border-primary-light disabled:opacity-50"
-                disabled={step === 1}
-                onClick={handlePrev}
-              >
-                Prev
-              </button>
-              <button
-                className="btn btn-secondary btn-md disabled:border-primary-light disabled:opacity-50"
-                disabled={step === totalSteps}
-                onClick={handleNext}
-              >
-                Next
-              </button>
-            </div> */}
           </div>
         </div>
       </OutletPageWrapper>
