@@ -59,16 +59,12 @@ const GridProperty = ({ details, _id, address, available, images }) => {
     <div className="card card-compact bg-base-100 hover:shadow-xl hover:shadow-secondary-light transition-all delay-0 shadow-secondary-lightest shadow-lg">
       {/* max-w-[17rem] */}
       {/* <figure className="sm:max-w-72 max-h-52 relative"> */}
-      <figure className="max-h-52 relative">
+      <figure className="max-h-52">
         {/* <img
             src={images[0]}
             alt="Shoes"
           /> */}
-        <Carousel>
-          {slides.map((src, index) => (
-            <img src={src} key={src} />
-          ))}
-        </Carousel>
+        <Carousel slides={slides} />
         {available && <div className="badge ml-auto text-xs bg-green-600 text-white absolute right-3 top-4 shadow-2xl border-none">available</div>}
       </figure>
       <div className="card-body !p-3">
