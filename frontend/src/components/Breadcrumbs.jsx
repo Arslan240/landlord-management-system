@@ -7,7 +7,6 @@ const Breadcrumbs = () => {
   let crumbs = location.pathname.split("/").filter((crumb) => crumb !== "")
   crumbs = crumbs.map((crumb, index) => {
     currentLink += `/${crumb}`
-    console.log(currentLink)
 
     return (
       <div className="crumb" key={crumb}>
@@ -18,7 +17,7 @@ const Breadcrumbs = () => {
       </div>
     )
   })
-  console.log(crumbs)
+  // console.log(crumbs)
 
   if (crumbs.length === 1) {
     return <></>
