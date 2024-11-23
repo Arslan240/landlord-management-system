@@ -42,7 +42,7 @@ const Properties = () => {
   const [pagination, setPagination] = useState(null)
   const searchRef = useRef()
 
-  //
+  // TODO: if page is changed and we change list view, the page stays the same which is not correct. fix it.
   const [view, setView] = useState(GRIDVIEW)
 
   const searchHandler = (e) => {
