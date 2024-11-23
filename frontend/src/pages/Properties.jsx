@@ -43,7 +43,7 @@ const Properties = () => {
   const searchRef = useRef()
 
   //
-  const [view, setView] = useState(LISTVIEW)
+  const [view, setView] = useState(GRIDVIEW)
 
   const searchHandler = (e) => {
     e.preventDefault()
