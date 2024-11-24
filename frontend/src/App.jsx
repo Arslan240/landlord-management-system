@@ -21,6 +21,13 @@ import Dashboard from "./pages/Dashboard"
 import Properties from "./pages/Properties"
 import SingleProperty from "./pages/SingleProperty"
 import AddProperty from "./pages/AddProperty"
+import Tenants from "./pages/Tenants"
+import Leases from "./pages/Leases"
+import Maintenance from "./pages/Maintenance"
+import Employees from "./pages/Employees"
+import Chat from "./pages/Chat"
+import Transactions from "./pages/Transactions"
+import Settings from "./pages/Settings"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,6 +60,34 @@ const router = createBrowserRouter([
           {
             path: "properties/add-property",
             element: <AddProperty />,
+          },
+          {
+            path: "tenants",
+            element: <Tenants />,
+          },
+          {
+            path: "leases",
+            element: <Leases />,
+          },
+          {
+            path: "maintenance",
+            element: <Maintenance />,
+          },
+          {
+            path: "employees",
+            element: <Employees />,
+          },
+          {
+            path: "chat",
+            element: <Chat />,
+          },
+          {
+            path: "transactions",
+            element: <Transactions />,
+          },
+          {
+            path: "settings",
+            element: <Settings />,
           },
         ],
       },
