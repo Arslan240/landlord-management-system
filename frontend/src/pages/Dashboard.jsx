@@ -25,7 +25,7 @@ const Dashboard = ({ children }) => {
         <SidebarContext.Provider value={{ expanded, setExpanded }}>
           <SidebarRenderer />
         </SidebarContext.Provider>
-        <div className="flex flex-col w-full bg-primary-backg ">
+        <div className="flex flex-col w-full">
           <Header />
           <Breadcrumbs />
           {isLoading ? (
@@ -36,7 +36,7 @@ const Dashboard = ({ children }) => {
                 ${expanded && "w-full"} sm:w-[85%] 
                 md:${expanded ? "w-full" : "w-[85%]"} lg:${expanded ? "w-full" : "w-[85%]"} xl:${
                 expanded ? "w-full" : "w-[85%]"
-              } 3xl:w-[75%] mx-auto overflow-y-auto max-w-[85rem]`}
+              } 3xl:w-[75%] mx-auto overflow-y-auto max-w-[85rem] `}
             >
               <Outlet />
             </main>
