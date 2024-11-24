@@ -17,7 +17,7 @@ body {
   }
 
   .dashboard-outlet {
-    @apply pb-5 pt-3;
+    @apply pb-5;
   }
 }
 
