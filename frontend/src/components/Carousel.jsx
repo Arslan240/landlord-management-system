@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-r
 import { useEffect } from "react"
 import { useState } from "react"
 
-const Carousel = ({ children, slides, autoslide, autoSlideInterval = 2000, roundedClass, spaceBetweenImages, thumbs }) => {
+const Carousel = ({ children, slides, autoslide, autoSlideInterval = 2000, roundedClass, spaceBetweenImages, imageHeightClass, thumbs }) => {
   const [curr, setCurr] = useState(0)
 
   const prev = () => setCurr((prevCurr) => (prevCurr - 1 + slides.length) % slides.length)
@@ -31,7 +31,7 @@ const Carousel = ({ children, slides, autoslide, autoSlideInterval = 2000, round
           {slides.map((item, index) => (
             <div className={`w-full flex-shrink-0 ${spaceBetweenImages ? "p-2" : ""}`}>
               <div key={index} className={`overflow-hidden ${roundedClass ? roundedClass : ""}`}>
-                <img src={item} alt={`Slide ${index}`} className={`w-full h-[20rem] object-cover`} />
+                <img src={item} alt={`Slide ${index}`} className={`w-full ${imageHeightClass ? imageHeightClass : "h-[20rem]"} object-cover`} />
               </div>
             </div>
           ))}
