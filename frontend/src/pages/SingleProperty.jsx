@@ -10,6 +10,10 @@ const getIdFromPathname = (pathname) => {
   return pathname.match(regex)[0]
 }
 
+const getAddress = (address) => {
+  return `${address.plotNo}, ${address.street}, ${address.city}, ${address.state}, ${address.postalCode}`
+}
+
 const cloudfront = "https://d299qmc6osrfqv.cloudfront.net"
 
 const SingleProperty = () => {
@@ -27,21 +31,70 @@ const SingleProperty = () => {
     return <Loading />
   }
 
-  let images = data.images
-  console.log(images)
+  const { name, address, details, available } = data
+  const { beds, baths, sqft, garage, rent, yearBuilt, furnished, petFriendly } = details
   let newImages = data.images.map((id) => `${cloudfront}/${id}`)
 
   return (
     <OutletPageWrapper title={`${data.name}`}>
-      <div className="flex flex-col md:flex-row gap-2">
-        <div className="md:w-3/6">
-          {/* <Carousel images={images} /> */}
-          <figure>
-            <Carousel slides={newImages} roundedClass={`rounded-3xl`} spaceBetweenImages thumbs />
-          </figure>
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col md:flex-row gap-2">
+          <div className="md:w-3/6 ">
+            {/* <Carousel images={images} /> */}
+            <figure>
+              <Carousel slides={newImages} roundedClass={`rounded-xl`} imageHeightClass={"h-[18rem]"} spaceBetweenImages thumbs />
+            </figure>
+          </div>
+          <div className="card shadow-xl rounded-md  p-4 gap-2 md:w-3/6 text-xs">
+            {/* <h2 className="text-xl">Details</h2> */}
+            {/* name */}
+            {name && (
+              <div className="flex justify-between">
+                <div>
+                  <p className="font-semibold text-sm">Name</p>
+                  <p>{name}</p>
+                </div>
+                {/* Availablity */}
+                {available && (
+                  <div>
+                    <span className={`badge ${available ? "badge-accent" : "badge-warning"} text-white text-xs`}>
+                      {available ? "available" : "occupied"}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+            {/* address */}
+            {address && (
+              <div>
+                <p className="font-semibold text-sm">Address</p>
+                <p className="">{getAddress(address)}</p>
+              </div>
+            )}
+
+            {/* beds and baths */}
+            <div className="flex align-start gap-2">
+              {beds && (
+                <div>
+                  <p className="font-semibold">{beds} beds</p>
+                </div>
+              )}
+              {baths && (
+                <div>
+                  <p className="font-semibold">{baths} baths</p>
+                </div>
+              )}
+            </div>
+            {/* TODO: come back and add these features */}
+            {/* features */}
+            {/* Lease Ending date */}
+          </div>
         </div>
-        <div className="">
-          <h2 className="text-2xl">Details</h2>
+        <div>
+          <h1 className="text-2xl font-extrabold">Tenants</h1>
+        </div>
+        <div>
+          <h1 className="text-2xl font-extrabold">Maintenance Requests</h1>
         </div>
       </div>
     </OutletPageWrapper>
