@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-r
 import { useEffect } from "react"
 import { useState } from "react"
 
-const Carousel = ({ children, slides, autoslide, autoSlideInterval = 2000 }) => {
+const Carousel = ({ children, slides, autoslide, autoSlideInterval = 2000, roundedClass, spaceBetweenImages, thumbs }) => {
   const [curr, setCurr] = useState(0)
 
   const prev = () => setCurr((prevCurr) => (prevCurr - 1 + slides.length) % slides.length)
@@ -22,14 +22,17 @@ const Carousel = ({ children, slides, autoslide, autoSlideInterval = 2000 }) => 
     return () => clearInterval(interval)
   }, [])
 
-  // TODO: assigning relative to outer div here, makes the dots break on properties page. Fix it.
+  // TODO: implement a carousel library so that thumbnails can be used properly.
+  // in current configuration it's not possible.
   return (
     <div className="relative h-full group">
       <div className="overflow-hidden relative w-full h-full ">
-        <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${curr * 100}%)` }}>
+        <div className={`flex transition-transform duration-500`} style={{ transform: `translateX(-${curr * 100}%)` }}>
           {slides.map((item, index) => (
-            <div key={index} className="w-full flex-shrink-0">
-              <img src={item} alt={`Slide ${index}`} className="w-full h-64 object-cover" />
+            <div className={`w-full flex-shrink-0 ${spaceBetweenImages ? "p-2" : ""}`}>
+              <div key={index} className={`overflow-hidden ${roundedClass ? roundedClass : ""}`}>
+                <img src={item} alt={`Slide ${index}`} className={`w-full h-[20rem] object-cover`} />
+              </div>
             </div>
           ))}
         </div>
@@ -43,7 +46,7 @@ const Carousel = ({ children, slides, autoslide, autoSlideInterval = 2000 }) => 
           </button>
         </div>
       </div>
-      <div className="absolute bottom-3 right-0 left-0">
+      <div className={`absolute ${spaceBetweenImages ? "bottom-6" : "bottom-3"} right-0 left-0`}>
         <div className="flex gap-2 items-center justify-center">
           {slides.map((_, id) => (
             <div
