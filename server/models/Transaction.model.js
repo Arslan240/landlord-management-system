@@ -11,12 +11,12 @@ const baseTransactionSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-    sender: {
+    senderId: {
       type: mongoose.Types.ObjectId,
       ref: "User",
       required: [true, "Please provide sender id"],
     },
-    receiver: {
+    receiverId: {
       type: mongoose.Types.ObjectId,
       ref: "User",
       required: [true, "Please provide receiver id"],
