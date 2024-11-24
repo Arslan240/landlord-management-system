@@ -5,29 +5,31 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 import HomeLayout from "./components/HomeLayout"
-import Landing from "./pages/Landing"
-import Login from "./pages/Login"
-import Register from "./pages/Register"
-import Error from "./pages/Error"
-import EmailVerification from "./pages/EmailVerification"
-import VerifyEmail from "./pages/VerifyEmail"
+import {
+  Landing,
+  Login,
+  Register,
+  Error,
+  EmailVerification,
+  VerifyEmail,
+  Dashboard,
+  Properties,
+  SingleProperty,
+  AddProperty,
+  Tenants,
+  Leases,
+  Maintenance,
+  Employees,
+  Chat,
+  Transactions,
+  Settings,
+} from "./pages"
 
 // actions
 import { action as registerAction } from "./pages/Register"
 import { action as loginAction } from "./pages/Login"
 import { action as verifyAction } from "./pages/VerifyEmail"
 import { store } from "./redux/store"
-import Dashboard from "./pages/Dashboard"
-import Properties from "./pages/Properties"
-import SingleProperty from "./pages/SingleProperty"
-import AddProperty from "./pages/AddProperty"
-import Tenants from "./pages/Tenants"
-import Leases from "./pages/Leases"
-import Maintenance from "./pages/Maintenance"
-import Employees from "./pages/Employees"
-import Chat from "./pages/Chat"
-import Transactions from "./pages/Transactions"
-import Settings from "./pages/Settings"
 
 const queryClient = new QueryClient({
   defaultOptions: {
