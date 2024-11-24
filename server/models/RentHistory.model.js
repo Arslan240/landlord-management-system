@@ -13,6 +13,11 @@ const RentHistorySchema = new mongoose.Schema({
     ref: Property,
     default: [true, "Please provide propertyId for RentHistory"],
   },
+  leaseId: {
+    type: mongoose.Types.ObjectId,
+    ref: "Lease",
+    required: [true, "Please provide relevant lease id"],
+  },
   rentDate: {
     type: Date,
     required: [true, "Please provide rent date for RentHistory"],
