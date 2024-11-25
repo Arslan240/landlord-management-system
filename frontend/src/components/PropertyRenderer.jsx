@@ -122,7 +122,7 @@ const ListProperty = ({ details, _id, address, available, images, index }) => {
       <td className="px-6 py-4">{details.beds}</td>
       <td className="px-6 py-4">{details.baths}</td>
       <td className="px-6 py-4">
-        <span className={`${available ? "bg-accent-light" : "bg-warning-light"} badge badge-ghost border-none`}>
+        <span className={`${available ? "bg-accent-light text-accent" : "bg-warning-light text-warning"} badge badge-ghost border-none`}>
           {available ? "Available" : "Occupied"}
         </span>
       </td>

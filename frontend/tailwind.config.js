@@ -23,7 +23,7 @@ export default {
         },
         accent: {
           DEFAULT: "#23C35E",
-          light: "#b9f6ce",
+          light: "#d2f9e0",
         },
         warning: {
           DEFAULT: "#FD6365",
