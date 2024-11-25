@@ -150,6 +150,7 @@ const Properties = () => {
         {!isFetching && properties?.length > 0 ? (
           <PropertyRenderer properties={properties} viewType={view} />
         ) : (
+          // TODO: Add a new button named Add Property if no properties are available
           !isFetching && <h1 className="text-2xl mt-16">No properties available</h1>
         )}
       </section>
