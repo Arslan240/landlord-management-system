@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
 import { customFetch } from "../utils"
 import Loading from "../components/Loading"
-import { useLocation, useNavigation } from "react-router-dom"
+import { Link, useLocation, useNavigation } from "react-router-dom"
 import OutletPageWrapper from "../components/OutletPageWrapper"
 import Carousel from "../components/Carousel"
+import TableRenderer from "../components/TableRenderer"
+import RequireAuth from "../components/RequireAuth"
 
 const getIdFromPathname = (pathname) => {
   const regex = /[^/]+$/
@@ -13,6 +15,14 @@ const getIdFromPathname = (pathname) => {
 const getAddress = (address) => {
   return `${address.plotNo}, ${address.street}, ${address.city}, ${address.state}, ${address.postalCode}`
 }
+
+const tenantHeadings = ["Name", "Email", "Lease End", "Rent", "Availability"]
+const tenantValues = [
+  ["Joseph", "joseph@gmail.com", "12 Dec, 2029", "$299", "available"],
+  ["Emily", "emily@gmail.com", "19 March, 2028", "$800", "occupied"],
+  ["Abraham", "abraham@gmail.com", "23 Jan, 2030", "$340", "available"],
+  ["Hailey", "hailey@gmail.com", "9 August, 2025", "$670", "occupied"],
+]
 
 const cloudfront = "https://d299qmc6osrfqv.cloudfront.net"
 
@@ -38,14 +48,14 @@ const SingleProperty = () => {
   return (
     <OutletPageWrapper title={`${data.name}`}>
       <div className="flex flex-col gap-3">
-        <div className="flex flex-col md:flex-row gap-2">
+        <div className="flex flex-col md:flex-row gap-2 pb-2">
           <div className="md:w-3/6 ">
             {/* <Carousel images={images} /> */}
             <figure>
               <Carousel slides={newImages} roundedClass={`rounded-xl`} imageHeightClass={"h-[18rem]"} spaceBetweenImages thumbs />
             </figure>
           </div>
-          <div className="card shadow-xl rounded-md  p-4 gap-2 md:w-3/6 text-xs">
+          <div className="card border-2 rounded-md  p-4 gap-2 md:w-3/6 text-xs">
             {/* <h2 className="text-xl">Details</h2> */}
             {/* name */}
             {name && (
@@ -91,14 +101,25 @@ const SingleProperty = () => {
           </div>
         </div>
         <div>
-          <h1 className="text-2xl font-extrabold">Tenants</h1>
+          <div className="flex flex-col justify-between md:flex-row ">
+            <h1 className="text-2xl font-bold">Tenants</h1>
+            <div className="flex gap-2">
+              <Link to={`/dashboard/tenants/discover`}>
+                <button className="btn text-white btn-secondary btn-sm">Find Tenants</button>
+              </Link>
+              <Link to={`/dashboard/tenants/add-tenant?prop=${id}&redirect=/dashboard/properties/${id}`}>
+                <button className="btn text-white btn-secondary btn-sm">Add Tenant</button>
+              </Link>
+            </div>
+          </div>
+          <TableRenderer headings={tenantHeadings} valueRows={tenantValues} badgeIndex={tenantHeadings.length - 1} successTerm={"available"} small />
         </div>
         <div>
-          <h1 className="text-2xl font-extrabold">Maintenance Requests</h1>
+          <h1 className="text-2xl font-bold">Maintenance Requests</h1>
         </div>
       </div>
     </OutletPageWrapper>
   )
 }
 
-export default SingleProperty
+export default RequireAuth(SingleProperty)
