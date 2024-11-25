@@ -12,23 +12,12 @@ const TableRenderer = ({ headings, valueRows, badgeIndex, successTerm, small = f
             {headings.map((heading) => (
               <th className="px-6 py-3 font-normal text-primary">{heading}</th>
             ))}
-            {/* <th className="px-6 py-3">#</th>
-            <th className="px-6 py-3">Street Add</th>
-            <th className="px-6 py-3">City</th>
-            <th className="px-6 py-3">Rent</th>
-            <th className="px-6 py-3">Beds</th>
-            <th className="px-6 py-3">Baths</th>
-            <th className="px-6 py-3">Available</th>
-            <th className="px-6 py-3">Ratings</th> */}
           </tr>
         </thead>
         <tbody>
           {valueRows.map((valueRow, index) => (
             <TableRow row={valueRow} index={index} badgeIndex={badgeIndex} successTerm={successTerm} small={small} />
           ))}
-          {/* {properties.map((item, index) => (
-            <ListProperty {...item} key={item._id} index={index + 1} />
-          ))} */}
         </tbody>
       </table>
     </div>
@@ -62,13 +51,6 @@ const TableRow = ({ row, index, clickHandler, badgeIndex = { badgeIndex }, succe
           )}
         </>
       ))}
-      {/* <td className="px-6 py-4">{index}</td>
-      <td className="px-6 py-4">{streetAdd}</td>
-      <td className="px-6 py-4">{address.city}</td>
-      <td className="px-6 py-4">${details.rent}</td>
-      <td className="px-6 py-4">{details.beds}</td>
-      <td className="px-6 py-4">{details.baths}</td>
-      <td className="px-6 py-4">4.5</td> */}
     </tr>
   )
 }
