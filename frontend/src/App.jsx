@@ -23,6 +23,7 @@ import {
   Chat,
   Transactions,
   Settings,
+  AddTenant,
 } from "./pages"
 
 // actions
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
           {
             path: "tenants",
             element: <Tenants />,
+          },
+          {
+            path: "tenants/add-tenant",
+            element: <AddTenant />,
           },
           {
             path: "leases",
