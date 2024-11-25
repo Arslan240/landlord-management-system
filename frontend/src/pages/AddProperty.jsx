@@ -8,6 +8,7 @@ import { useEffect } from "react"
 import { toast } from "react-toastify"
 import { capitalize, customFetch } from "../utils"
 import { useRef } from "react"
+import RequireAuth from "../components/RequireAuth"
 
 // label, type, placeholder, disabled, rightLabel, dropdown
 const totalSteps = 3
@@ -198,6 +199,6 @@ const AddProperty = () => {
   )
 }
 
-export default AddProperty
+export default RequireAuth(AddProperty)
 
 export const useAddPropertyContext = () => useContext(AddPropertyContext)
