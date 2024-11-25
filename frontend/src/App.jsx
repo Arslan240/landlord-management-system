@@ -31,6 +31,7 @@ import { action as registerAction } from "./pages/Register"
 import { action as loginAction } from "./pages/Login"
 import { action as verifyAction } from "./pages/VerifyEmail"
 import { store } from "./redux/store"
+import { addTenantPropertyLoader } from "./pages/AddTenant"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,6 +72,7 @@ const router = createBrowserRouter([
           {
             path: "tenants/add-tenant",
             element: <AddTenant />,
+            loader: addTenantPropertyLoader(queryClient),
           },
           {
             path: "leases",
