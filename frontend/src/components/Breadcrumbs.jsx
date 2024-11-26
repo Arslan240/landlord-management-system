@@ -13,7 +13,7 @@ const Breadcrumbs = () => {
         <Link to={currentLink} className="hover:text-secondary hover:underline capitalize">
           {crumb}
         </Link>
-        {index < crumbs.length - 1 && <p className="my-1 inline mx-2">&gt;</p>}
+        {index < crumbs.length - 1 && <p className="my-1 inline mx-2">/</p>}
       </div>
     )
   })
