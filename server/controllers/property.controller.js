@@ -157,7 +157,7 @@ const generateDBQuery = (queryParams, query) => {
 
   // when there is a search term from search box, its for this. only searches across text based details.
   // function updates original query object by reference
-  generateDBQuery(query, search)
+  generateTextSearchQuery(query, search)
 
   let rentQuery = {}
   if (rent_min && rent_max) {
