@@ -121,19 +121,12 @@ module.exports = {
   addProperty,
 }
 
+// HELPER FUNCTIONS
+
 // TODO: find validation error type in error handler middleware, and find a way to show the error in a better way. for address. just send back the error address is not complete.
 
-// generate proper query for db query
-const generateDBQuery = (queryParams, query) => {
-  // prettier-ignore
-  const { search, rent_min, rent_max, 
-    sqft_min, sqft_max, 
-    beds_min, beds_max, 
-    baths_min, baths_max, 
-    year_min, year_max, 
-    garage_min, garage_max } = queryParams
-
-  // when there is a search term from search box, its for this. only searches across text based details.
+// generate text query for searching across only address and category
+const generateTextSearchQuery = (query, search) => {
   const textSearchConditions = [
     { "address.plotNo": { $regex: search, $options: "i" } },
     { "address.city": { $regex: search, $options: "i" } },
@@ -148,6 +141,22 @@ const generateDBQuery = (queryParams, query) => {
       query.$or.push(...textSearchConditions)
     } else query.$or = textSearchConditions
   }
+  return query
+}
+
+// generate proper query for db query
+const generateDBQuery = (queryParams, query) => {
+  // prettier-ignore
+  const { search, rent_min, rent_max, 
+    sqft_min, sqft_max, 
+    beds_min, beds_max, 
+    baths_min, baths_max, 
+    year_min, year_max, 
+    garage_min, garage_max } = queryParams
+
+  // when there is a search term from search box, its for this. only searches across text based details.
+  // function updates original query object by reference
+  generateDBQuery(query, search)
 
   let rentQuery = {}
   if (rent_min && rent_max) {
