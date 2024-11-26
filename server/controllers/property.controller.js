@@ -115,10 +115,26 @@ const addProperty = async (req, res) => {
   res.status(StatusCodes.CREATED).send({ property })
 }
 
+const getPropertyLookup = async (req, res) => {
+  const { search } = req.query
+
+  const queryObject = { owner: req.user.id }
+  generateTextSearchQuery(queryObject, search)
+
+  let properties = await Property.find(queryObject).select(["id", "address", "name"])
+
+  if (!properties) {
+    properties = []
+  }
+
+  res.send({ data: { properties, length: properties.length } })
+}
+
 module.exports = {
   getAllProperties,
   getSingleProperty,
   addProperty,
+  getPropertyLookup,
 }
 
 // HELPER FUNCTIONS
