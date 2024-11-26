@@ -6,8 +6,10 @@ import { customFetch } from "../utils"
 import { toast } from "react-toastify"
 
 // const propertyLoader
-const validateRedirectUrl = (redirectUrl = "") => {
+const validateRedirectUrl = (redirectUrl) => {
   const validUrls = ["/dashboard/tenants", "/dashboard/properties/"]
+  // if null then "" is assigned
+  redirectUrl = redirectUrl ?? ""
   return validUrls.some((path) => redirectUrl.startsWith(path))
 }
 
