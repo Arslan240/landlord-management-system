@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react"
-import Dropdown from "./Dropdown"
+import RangeDropdown from "./RangeDropdown"
 import { usePropertyState } from "../redux/propertySlice"
 import { Bath, Bed, CarFront, Filter } from "lucide-react"
 import { useDispatch } from "react-redux"
@@ -58,7 +58,7 @@ const SingleFilter = ({ name }) => {
         <span>{name}</span>
         <span className={`${!selected && "hidden"} badge p-1 h-1 bg-indigo-800 absolute top-0 right-2`}></span>
       </div>
-      <Dropdown name={name} min={min} max={max} selected={selected} setSelected={setSelected} isReset={isReset} setIsReset={setIsReset} />
+      <RangeDropdown name={name} min={min} max={max} selected={selected} setSelected={setSelected} isReset={isReset} setIsReset={setIsReset} />
     </div>
   )
 }

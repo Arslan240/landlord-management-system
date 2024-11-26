@@ -26,7 +26,7 @@ import { toast } from "react-toastify"
 const MANUAL = "MANUAL"
 const SLIDER = "SLIDER"
 
-const Dropdown = ({ name, min = 0, max = 700, selected, setSelected, isReset, setIsReset }) => {
+const RangeDropdown = ({ name, min = 0, max = 700, selected, setSelected, isReset, setIsReset }) => {
   const dispatch = useDispatch()
   const [type, setType] = useState(null)
   // text input
@@ -124,7 +124,7 @@ const Dropdown = ({ name, min = 0, max = 700, selected, setSelected, isReset, se
     </ul>
   )
 }
-export default Dropdown
+export default RangeDropdown
 
 // simple implementation
 {
