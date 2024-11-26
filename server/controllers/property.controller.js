@@ -134,6 +134,7 @@ const generateTextSearchQuery = (query, search) => {
     { "address.street": { $regex: search, $options: "i" } },
     { "address.postalCode": { $regex: search, $options: "i" } },
     { category: { $regex: search, $options: "i" } },
+    { name: { $regex: search, $options: "i" } },
   ]
 
   if (search) {
