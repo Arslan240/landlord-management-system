@@ -20,6 +20,7 @@ const leaseSchema = new mongoose.Schema({
     default: Date.now(),
   },
   endDate: Date, //if no end date it means the lease will be on going for near future.
+  terms: String,
 })
 
 const Lease = mongoose.model("Lease", leaseSchema)
