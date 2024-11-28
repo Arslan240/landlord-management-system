@@ -24,6 +24,7 @@ import {
   Transactions,
   Settings,
   AddTenant,
+  AddLease,
 } from "./pages"
 
 // actions
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
           {
             path: "leases",
             element: <Leases />,
+          },
+          {
+            path: "leases/add-lease",
+            element: <AddLease />,
           },
           {
             path: "maintenance",
