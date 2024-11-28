@@ -24,7 +24,7 @@ const TableRenderer = ({ headings, valueRows, badgeIndex, successTerm, small = f
   )
 }
 
-const TableRow = ({ row, index, clickHandler, badgeIndex = { badgeIndex }, successTerm = { successTerm }, small }) => {
+const TableRow = ({ row, index, clickHandler, badgeIndex, successTerm, small }) => {
   return (
     <tr className="border-b text-xs bg-[#fafafa] hover:bg-indigo-50 cursor-pointer" onClick={clickHandler}>
       <td className="px-6">{index + 1}</td>
