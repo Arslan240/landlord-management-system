@@ -47,7 +47,7 @@ const SingleProperty = () => {
 
   return (
     <OutletPageWrapper title={`${data.name}`}>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-7">
         <div className="flex flex-col md:flex-row gap-2 pb-2">
           <div className="md:w-3/6 ">
             {/* <Carousel images={images} /> */}
@@ -115,7 +115,33 @@ const SingleProperty = () => {
           <TableRenderer headings={tenantHeadings} valueRows={tenantValues} badgeIndex={tenantHeadings.length - 1} successTerm={"available"} small />
         </div>
         <div>
-          <h1 className="text-2xl font-bold">Maintenance Requests</h1>
+          <div className="flex flex-col justify-between md:flex-row ">
+            {/* Add Details button where you take them to leases page and also add filters there based on status and dates. */}
+            <h1 className="text-2xl font-bold">Leases</h1>
+            <div className="flex gap-2">
+              <Link to={`/dashboard/leases/add-lease?prop=${id}&redirect=/dashboard/properties/${id}`}>
+                <button className="btn text-white btn-secondary btn-sm">Add New Lease</button>
+              </Link>
+            </div>
+          </div>
+          <TableRenderer headings={tenantHeadings} valueRows={tenantValues} small />
+        </div>
+        <div>
+          <div className="flex flex-col justify-between md:flex-row ">
+            {/* Add Details button where you take them to maintenance page and also add filters there based on status and dates. tenants' emails etc */}
+            <h1 className="text-2xl font-bold">Maintenance Requests</h1>
+            <div className="flex gap-2">
+              <Link to={`/dashboard/leases/add-lease?prop=${id}&redirect=/dashboard/properties/${id}`}>
+                {/* TODO: if tenant adds maintenance request then it would be different layout
+                If landlord adds maintenance request then it would be different, condition would be if owner of property then 
+                show landlord layout, otherwise tenant layout. Also first check if the tenant is renting this property, only
+                then allow him to add maintenance request.
+              */}
+                <button className="btn text-white btn-secondary btn-sm">Add New Request</button>
+              </Link>
+            </div>
+          </div>
+          <TableRenderer headings={tenantHeadings} valueRows={tenantValues} small />
         </div>
       </div>
     </OutletPageWrapper>
