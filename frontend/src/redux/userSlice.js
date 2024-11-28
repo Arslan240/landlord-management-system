@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { toast } from "react-toastify"
-import { getItemFromLocalStorage } from "../utils"
+import getItemFromLocalStorage from "../utils/getItemFromLocalStorage"
 import { useSelector } from "react-redux"
 
 // returned from server / saved in local storage
