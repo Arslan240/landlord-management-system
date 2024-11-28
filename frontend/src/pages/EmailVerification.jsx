@@ -1,6 +1,7 @@
 import CentreTemplate from "./CentreTemplate"
 
 // TODO: Add a button for end email again. Also add this route in backend because this route doesn't exist. Also figure out a way of authenticating user in this situation.
+// TODO: add check on so that user can't directly come here, or atlease search about it if it should be permissible or not.
 const EmailVerification = () => {
   return (
     <CentreTemplate>
