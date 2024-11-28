@@ -19,7 +19,7 @@ customFetch.interceptors.response.use(
       store.dispatch(logout())
       window.location.href("/login")
     }
-    return Promise.reject(error)
+    throw error
   }
 )
 export default customFetch
