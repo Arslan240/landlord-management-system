@@ -26,7 +26,7 @@ const TableRenderer = ({ headings, valueRows, badgeIndex, successTerm, small = f
 
 const TableRow = ({ row, index, clickHandler, badgeIndex = { badgeIndex }, successTerm = { successTerm }, small }) => {
   return (
-    <tr className="border-b text-xs hover:bg-primary-hoverlight cursor-pointer" onClick={clickHandler}>
+    <tr className="border-b text-xs bg-[#fafafa] hover:bg-indigo-50 cursor-pointer" onClick={clickHandler}>
       <td className="px-6">{index + 1}</td>
 
       {row.map((value, index) => (
