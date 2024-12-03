@@ -35,3 +35,9 @@ const TenantSchema = new mongoose.Schema(
 )
 
 TenantSchema.indexes({ idNumber: 1 }, { unique: true })
+
+const Tenant = mongoose.model("Tenant", TenantSchema)
+
+module.exports = {
+  Tenant,
+}
