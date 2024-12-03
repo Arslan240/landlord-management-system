@@ -40,6 +40,8 @@ const UserSchema = new mongoose.Schema({
   },
 })
 
+UserSchema.index({ idNumber: 1 }, { unique: true })
+
 UserSchema.pre("save", async function () {
   if (!this.isModified("password")) return
   const salt = await bcrypt.genSalt(14)
