@@ -7,11 +7,12 @@ const { StatusCodes } = require("http-status-codes")
 const crypto = require("crypto")
 const { attachCookiesToResponse } = require("../utils/jwt")
 const { createTokenUser } = require("../utils/createTokenUser")
+const { checkTenantUser } = require("../utils/checkTenantUser")
 
 const registerController = async (req, res) => {
-  const { name, email, password } = req.body
+  const { name, email, password, idNumber } = req.body
 
-  if (!name || !email || !password) {
+  if (!name || !email || !password || !idNumber) {
     throw new BadRequestError("Please provide all values")
   }
 
@@ -21,19 +22,32 @@ const registerController = async (req, res) => {
     throw new BadRequestError("Email is already registered")
   }
 
+  // check if id number is already present in Users
+  const idNumberNotUnique = await User.findOne({ idNumber })
+  if (idNumberNotUnique) {
+    throw new BadRequestError("User is already registered")
+  }
+
   // generate jwt token for user
   const verificationToken = crypto.randomBytes(14).toString("hex")
 
   const firstUser = (await User.countDocuments({})) === 0
   const role = firstUser ? "admin" : "user"
 
-  const user = await User.create({
+  let userObject = {
     name,
     email,
     password,
+    idNumber,
     verificationToken,
     role,
-  })
+  }
+
+  // check if id Number is present in tenants, if yes then it means the user was an offline tenant which is now registering. So we pass tenant id as user id
+  await checkTenantUser(userObject, idNumber)
+  console.log(userObject)
+
+  const user = await User.create(userObject)
   if (!user) {
     throw new Error("Something went wrong")
   }
@@ -43,8 +57,11 @@ const registerController = async (req, res) => {
 
   res.send({
     user: {
-      name, email, role, isVerified: user.isVerified
-    }
+      name,
+      email,
+      role,
+      isVerified: user.isVerified,
+    },
   })
 }
 
@@ -81,7 +98,7 @@ const loginController = async (req, res) => {
   }
 
   const user = await User.findOne({ email })
-  console.log(user);
+  console.log(user)
   if (!user) {
     throw new UnAuthenticateError("Invalid credentials")
   }
@@ -94,11 +111,11 @@ const loginController = async (req, res) => {
   const tokenUser = createTokenUser(user)
   // check email verification
   if (!user.isVerified) {
-    console.log('user not verified');
+    console.log("user not verified")
     throw new UnAuthenticateError("Please verify your email", {
       user: {
         ...tokenUser,
-        isVerified: user.isVerified
+        isVerified: user.isVerified,
       },
     })
   }
@@ -134,7 +151,7 @@ const loginController = async (req, res) => {
   // const tokenUser = createTokenUser(user)
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
-  console.log({ user: { ...tokenUser, isVerified: user.isVerified } });
+  console.log({ user: { ...tokenUser, isVerified: user.isVerified } })
   res.status(StatusCodes.OK).json({ user: { ...tokenUser, isVerified: user.isVerified } })
 }
 
