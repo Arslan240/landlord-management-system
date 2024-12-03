@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken")
 const authMiddleware = async (req, res, next) => {
   //   const { access_token, refresh_token } = req.signedCookies //only work in production
   let { access_token, refresh_token } = req.signedCookies
-  console.log(access_token, refresh_token)
+  console.log({ access_token, refresh_token })
 
   try {
     // if access token exists we'll use that first and check if its valid, if its invalid, we'll directly go to invalid authentication and wont check refresh token
