@@ -20,13 +20,17 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: [String],
-    enum: ["admin", "landlord", "tenant","user"], //user is both landlord and tenant based on his acivity.
+    enum: ["admin", "landlord", "tenant", "user"], //user is both landlord and tenant based on his acivity.
     default: ["user"],
   },
   password: {
     type: String,
     required: [true, "Please provide password"],
     minlength: 8,
+  },
+  idNumber: {
+    type: String,
+    required: [true, ["Please provide govt identification number"]],
   },
   verificationToken: String,
   verifiedDate: Date,
