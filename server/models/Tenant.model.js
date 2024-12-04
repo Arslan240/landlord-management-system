@@ -7,6 +7,12 @@ const TenantSchema = new mongoose.Schema(
       ref: "User",
       default: null, // null for offline tenant (i.e not a registered user on rently)
     },
+    createdBy: {
+      // for offline tenant, landlord id will be stored
+      type: String,
+      ref: "User",
+      default: null,
+    },
     name: {
       type: String,
       required: [true, "Please provide name for tenant"],
@@ -16,7 +22,7 @@ const TenantSchema = new mongoose.Schema(
       required: [true, "Please provide date of birth for tenant"],
     },
     occupation: {
-      type: Date,
+      type: String,
       required: [true, "Please provide occupation of the tenant"],
     },
     idNumber: {
@@ -25,7 +31,10 @@ const TenantSchema = new mongoose.Schema(
       required: [true, "Please provide govt identification number"],
     },
     salary: Number,
-    imageUrl: String,
+    imageUrl: {
+      type: String,
+      default: "https://avatar.iran.liara.run/public/boy?username=Joseph",
+    },
     isOffline: {
       type: Boolean,
       default: true, // true if tenant is offline
