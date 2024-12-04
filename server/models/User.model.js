@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const validator = require("validator")
 const bcrypt = require("bcryptjs")
 
+// TODO: add gender in user and on frontend. Also update all the controllers to get the placeholder avatar using the gender and complete name.
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
