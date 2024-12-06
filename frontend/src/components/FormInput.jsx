@@ -1,7 +1,10 @@
 import { forwardRef } from "react"
 
 const FormInput = forwardRef(
-  ({ label, type, placeholder, name, disabled, rightLabel, dropdown = false, flexChild = false, small, labelIcon, error, ...rest }, ref) => {
+  (
+    { label, type, placeholder, name, disabled, rightLabel, dropdown = false, flexChild = false, small, labelIcon, error, inputClasses, ...rest },
+    ref
+  ) => {
     const padding = !dropdown ? `p-[0.6rem]` : `p-4`
     return (
       <>
@@ -26,14 +29,14 @@ const FormInput = forwardRef(
             name={name}
             type={type}
             ref={ref}
-            className={`${padding} block w-full border-gray-200 rounded-lg text-sm focus:border-secondary focus:ring-border-secondary disabled:opacity-50 disabled:pointer-events-none ${
+            className={`${padding} block w-full max-w-[500px] border-gray-200 rounded-lg  focus:border-secondary focus:ring-border-secondary disabled:opacity-50 disabled:pointer-events-none ${
               error && "border-[1px] border-warning"
-            } ${small && "text-[0.8rem]"}`}
+            } ${small && "text-xs"}`}
             disabled={disabled}
             placeholder={placeholder}
             {...rest}
           />
-          {error && <p className="text-warning py-1">{error.message}</p>}
+          {error && <p className={`text-warning py-1 ${small && "text-xs"}`}>{error.message}</p>}
         </div>
       </>
     )
