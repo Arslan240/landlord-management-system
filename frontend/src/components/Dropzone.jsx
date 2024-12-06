@@ -14,6 +14,7 @@ function Dropzone({
   maxSizeMessage,
   maxFilesMessage,
   error,
+  minimalist,
 }) {
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
     setAcceptedFiles((prevFiles) => [...prevFiles, ...acceptedFiles.map((file) => Object.assign(file, { preview: URL.createObjectURL(file) }))]) //we are creating a new property of preview containing url of it to show in browser later.
@@ -24,6 +25,9 @@ function Dropzone({
       toast.error(rejectedFiles[0].errors[0].message)
     }
   }, [])
+
+  const showUploadArea = !minimalist || (minimalist && acceptedFiles.length <= 0)
+  console.log(showUploadArea)
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { "image/*": [] }, maxSize, maxFiles })
 
@@ -42,30 +46,34 @@ function Dropzone({
   //   console.log(acceptedFiles)
   return (
     <div className="flex flex-col gap-3">
-      <div
-        {...getRootProps({
-          // Any prop that needs to be passed to this div should be passed to this function. If passed directly to div, our attributes can override the library's props, which are essential for functioning.
-          className: `${className}`, // Concatenate `className` properly
-        })}
-      >
-        <div className="px-12 py-12 mt-4 bg-white border border-neutral-300 rounded-xl cursor-pointer hover:bg-secondary-lightest">
-          <input {...getInputProps()} name="uploadedFiles" />
-          {isDragActive ? (
-            <p className="rounded-3xl">Drop the files here ...</p>
-          ) : (
-            <>
-              <Upload className="mx-auto" size={"2.5rem"} />
-              <p className="py-4 text-center">
-                Drag 'n' drop files here, or click to select files <br /> {maxFilesMessage} <br /> {maxSizeMessage}
-              </p>
-            </>
-          )}
+      {showUploadArea && (
+        <div
+          {...getRootProps({
+            // Any prop that needs to be passed to this div should be passed to this function. If passed directly to div, our attributes can override the library's props, which are essential for functioning.
+            className: `${className}`, // Concatenate `className` properly
+          })}
+        >
+          <div
+            className={`${minimalist ? "p-4" : "p-12"} mt-4 bg-white border border-neutral-300 rounded-xl cursor-pointer hover:bg-secondary-lightest`}
+          >
+            <input {...getInputProps()} name="uploadedFiles" />
+            {isDragActive ? (
+              <p className="rounded-3xl">Drop the files here ...</p>
+            ) : (
+              <>
+                <Upload className="mx-auto" size={"2.5rem"} />
+                <p className="py-4 text-center">
+                  Drag 'n' drop files here, or click to select files <br /> {maxFilesMessage} <br /> {maxSizeMessage}
+                </p>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       {/* PREVIEW UPLOADED FILES */}
       <div>
         <div className="flex flex-col gap-2 justify-between text-[0.79rem] text-slate-700 leading-4">
-          {acceptedFiles.length > 0 && (
+          {acceptedFiles.length > 0 && showUploadArea && (
             <>
               <h2 className="pb-1 text-xl font-semibold">Preview</h2>
               <p>Hero image is selected, click to select a different image for property.</p>
