@@ -8,19 +8,7 @@ import { useState } from "react"
 import { validateDate } from "../../utils/validateDate"
 
 // for time being we don't need multi steps in the form so we'll start by simple forms without animation and steps
-const TenantDetailsForm = () => {
-  const [acceptedFiles, setAcceptedFiles] = useState([])
-
-  const {
-    register,
-    formState: { errors, isLoading, isSubmitSuccessful },
-    watch,
-    handleSubmit,
-  } = useForm({
-    defaultValues: { isOffline: true },
-    mode: "onBlur",
-  })
-
+const TenantDetailsForm = ({ acceptedFiles, setAcceptedFiles, watch, register, errors }) => {
   const offlineTenant = watch("isOffline")
 
   const onSubmit = (data) => {
@@ -31,7 +19,8 @@ const TenantDetailsForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit((data) => onSubmit(data))}>
+    <>
+      {/* <form onSubmit={handleSubmit((data) => onSubmit(data))}> */}
       <h1 className="text-2xl font-medium">Tenant Details</h1>
       <CheckBoxInput label={"Is tenant offline?"} name={"isOffline"} {...register("isOffline")} error={errors["isOffline"]} />
 
@@ -123,10 +112,11 @@ const TenantDetailsForm = () => {
           />
         )}
       </div>
-      <button type="submit" className="btn btn-secondary btn-sm text-white mt-4">
+      {/* <button type="submit" className="btn btn-secondary btn-sm text-white mt-4">
         Submit
-      </button>
-    </form>
+      </button> */}
+      {/* </form> */}
+    </>
   )
 }
 
