@@ -19,6 +19,7 @@ const leaseSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  deposit: Number,
   endDate: Date, //if no end date it means the lease will be on going for near future.
   terms: String,
 })
