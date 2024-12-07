@@ -83,8 +83,8 @@ function Dropzone({
             </>
           )}
         </div>
-        <div className="py-4">
-          {acceptedFiles.length > 0 && (
+        {acceptedFiles.length > 0 && (
+          <div className="py-4">
             <ul className="flex gap-3 flex-wrap">
               {acceptedFiles.map((file, index) => (
                 <li key={`${file.name}`} className="relative ">
@@ -104,8 +104,8 @@ function Dropzone({
                 </li>
               ))}
             </ul>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       <div>{error && <p className="text-warning py-1">{error.message}</p>}</div>
     </div>
