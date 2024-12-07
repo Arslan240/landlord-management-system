@@ -9,6 +9,8 @@ import { createContext, useState } from "react"
 import { toast } from "react-toastify"
 import PropertyDetailsForm from "../components/AddLeaseForm/PropertyDetailsForm"
 import { useForm } from "react-hook-form"
+import { getPresignedUrls } from "../utils/getPresignedUrls"
+import { uploadFilesToS3 } from "../utils/uploadFilesToS3"
 
 export const addLeaseLoader =
   (queryClient) =>
@@ -50,10 +52,16 @@ const AddLease = () => {
     mode: "onBlur",
   })
 
-  const onSubmit = (data) => {
-    const { propertyId, rent, deposit, startDate, endDate, terms, name, email, occupation, dob, idNumber, salary, imageUrl } = data
+  const onSubmit = async (data) => {
+    const { propertyId, rent, deposit, startDate, endDate, terms, isOffline, name, email, occupation, dob, idNumber, salary, imageId } = data
     console.log(acceptedFiles)
-    const propertyDetails = {
+
+    if (isOffline) {
+      // const urls = await getPresignedUrls(acceptedFiles[0]) //only 1 file for user image
+      // const ids = await uploadFilesToS3(urls, [acceptedFiles[0]]) //a new array with only first image
+    }
+
+    let propertyDetails = {
       propertyId,
       rent,
       deposit,
@@ -62,15 +70,22 @@ const AddLease = () => {
       terms,
     }
     const tenantDetails = {
+      isOffline,
       name,
       email,
       occupation,
       dob,
       idNumber,
       salary,
-      imageUrl,
+      imageId,
     }
-    console.log(data)
+    try {
+      const { data: leaseData } = await customFetch.post("leases", { tenantDetails, propertyDetails })
+    } catch (error) {
+      toast.error(error.message)
+    }
+    console.log(propertyDetails)
+    console.log(tenantDetails)
   }
 
   return (
