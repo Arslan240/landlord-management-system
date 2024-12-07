@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form"
 import { useEffect } from "react"
 import { toast } from "react-toastify"
 import { customFetch, getObjectKeyFromS3Url } from "../../utils"
+import { getPresignedUrls } from "../../utils/getPresignedUrls"
+import { uploadFilesToS3 } from "../../utils/uploadFilesToS3"
 
 const minImagesNo = 2
 const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
@@ -49,34 +51,6 @@ const PropertyImagesForm = ({ variants, defaultValues, custom }) => {
     }
     onSubmit({ media: acceptedFiles }, step)
     setFormCompleted(true)
-  }
-
-  const getPresignedUrls = async (fileNames) => {
-    try {
-      const { data } = await customFetch.post("upload/getsignedurls", {
-        fileNames,
-      })
-      return data?.urls
-    } catch (error) {
-      console.log(error.message)
-      toast.error("Error in getting presigned urls.")
-      throw error
-    }
-  }
-
-  const uploadFilesToS3 = async (urls, files) => {
-    try {
-      const promisesArr = urls.map((url, index) => {
-        return axios.put(url, files[index], { headers: { "Content-Type": files[index].type || "image/*" } })
-      })
-
-      let resp = await Promise.all(promisesArr)
-      const data = resp.map(({ config }) => config?.url.split("?")[0])
-      return data
-    } catch (error) {
-      toast.error(`There was an error in uploading files to s3\n ${error.message}`)
-      throw error
-    }
   }
 
   // TODO: bug: when media upload/getting presigned url fails, if user clicks submit again, as formCompleted is already true so this useEffect doesn't rerun. Gotta figure out this bug.
