@@ -1,26 +1,40 @@
-import { motion } from "motion/react"
 import { useLoaderData } from "react-router-dom"
-import { useForm } from "react-hook-form"
 import FormInput from "../FormInput"
-import CheckBoxInput from "../CheckBoxInput"
-import Dropzone from "../Dropzone"
-import { toast } from "react-toastify"
-import { useState } from "react"
-import { validateDate } from "../../utils/validateDate"
 import FormTextArea from "../FormTextArea"
+import { SelectInput } from "../SelectInput"
+import { validateDate } from "../../utils/validateDate"
+
+const propertySelectOptions = (properties) => {
+  if (!properties) return []
+
+  return properties.map(({ name, _id: id, address }) => {
+    if (name) return { option: name, value: id }
+    return { option: `${address.plotNo}, ${address.street}, ${address.city}`, value: id }
+  })
+}
 
 // for time being we don't need multi steps in the form so we'll start by simple forms without animation and steps
 const PropertyDetailsForm = ({ register, errors }) => {
   const loaderData = useLoaderData()
+  const { properties } = loaderData
 
-  console.log("loader data: ", loaderData)
+  const selectOptions = propertySelectOptions(properties)
 
   // TODO: use zod or yup to handle precise validation like rent can only be number
   return (
     <>
       {/* <form onSubmit={handleSubmit((data) => onSubmit(data))}> */}
-      <h1 className="text-2xl font-medium">Property Details</h1>
+      <h1 className="text-2xl font-medium pb-2">Property Details</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <SelectInput
+          label={"Select Property"}
+          name={"propertyId"}
+          options={selectOptions}
+          {...register("propertyId")}
+          error={errors["propertyId"]}
+          flexChild
+          small
+        />
         <FormInput
           label={"Rent Amount"}
           type={"text"}
@@ -48,7 +62,7 @@ const PropertyDetailsForm = ({ register, errors }) => {
           flexChild
           placeholder={"02/10/2021"}
           small
-          {...register("startDate", { required: "Starting date is required" })}
+          {...register("startDate", { required: "Starting date is required", validate: validateDate })}
           error={errors["startDate"]}
         />
         <FormInput
