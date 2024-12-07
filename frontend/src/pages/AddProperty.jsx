@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import axios from "axios"
 import { AnimatePresence, motion } from "motion/react"
 import OutletPageWrapper from "../components/OutletPageWrapper"
@@ -55,6 +55,8 @@ const createProperty = async (property) => {
 const AddPropertyContext = createContext()
 
 const AddProperty = () => {
+  const [searchParams] = useSearchParams()
+  const redirect = searchParams.get("redirect")
   const navigate = useNavigate()
   const toastRef = useRef(null)
   const [step, setStep] = useState(1)
@@ -159,6 +161,13 @@ const AddProperty = () => {
           isLoading: false,
           autoClose: 3000,
         })
+        // TODO: Test it properly by coming from add-lease page, add property and see if it redirects to the add-lease page, on the add-lease page it should populate the correct propertyId in select input.
+        if (redirect) {
+          if (redirect.endsWith("/add-lease")) {
+            navigate(`${redirect}?prop=${_id}`)
+            return
+          }
+        }
         // toast.success("Property created Successfully")
         navigate(`/dashboard/properties/${_id}`)
       }
