@@ -18,7 +18,7 @@ const FormTextArea = forwardRef(({ label, rightLabel, labelIcon, name, placehold
           <span className="block mb-2 text-sm text-gray-500 ">{rightLabel}</span>
         </div>
       )}
-      <textarea className={`w-full h-36 p-2 ${small && "text-xs"}`} id={`${label}-${name}`} name={name} {...rest} ref={ref} />
+      <textarea className={`w-full h-36 p-2 rounded-md ${small && "text-xs"}`} id={`${label}-${name}`} name={name} {...rest} ref={ref} />
       {error && <p className={`text-warning py-1 ${small && "text-xs"}`}>{error.message}</p>}
     </div>
   )
