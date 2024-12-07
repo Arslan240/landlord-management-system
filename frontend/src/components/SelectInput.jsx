@@ -1,10 +1,10 @@
 import { forwardRef } from "react"
 
 export const SelectInput = forwardRef(
-  ({ label, name, rightLabel, options, padding, small, flexChild = false, defaultValue, error, ...rest }, ref) => {
+  ({ label, name, rightLabel, options, padding, small, flexChild = false, defaultValue, error, hidden, ...rest }, ref) => {
     // const padding = !dropdown ? `p-[0.6rem]` : `p-4`
     return (
-      <div className={`w-full ${!flexChild && "my-3"}`}>
+      <div className={`w-full ${hidden && "hidden"} ${!flexChild && "my-3"}`}>
         {(label || rightLabel) && (
           <div className="flex justify-between items-center ">
             <label htmlFor="" className="block text-sm font-medium mb-1 capitalize">
@@ -18,7 +18,6 @@ export const SelectInput = forwardRef(
             Pick one
           </option>
           {options.map(({ option, value }, index) => {
-            console.log(option, value)
             return (
               <option className="capitalize" key={index} value={value}>
                 {option}
