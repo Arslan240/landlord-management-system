@@ -31,9 +31,8 @@ const TenantSchema = new mongoose.Schema(
       required: [true, "Please provide govt identification number"],
     },
     salary: Number,
-    imageUrl: {
+    imageId: {
       type: String,
-      default: "https://avatar.iran.liara.run/public/boy?username=Joseph",
     },
     isOffline: {
       type: Boolean,
