@@ -13,15 +13,24 @@ export const SelectInput = forwardRef(
             {rightLabel && <span className="block mb-2 text-sm text-gray-500 ">{rightLabel}</span>}
           </div>
         )}
-        <select className={`p-[0.6rem] select select-bordered w-full ${small && "text-[0.8rem]"}`} name={name} s ref={ref} {...rest}>
+        <select
+          className={`p-[0.6rem] select select-bordered w-full max-w-[500px] ${small && "select-sm text-[0.8rem]"}`}
+          name={name}
+          s
+          ref={ref}
+          {...rest}
+        >
           <option disabled value={null}>
             Pick one
           </option>
-          {options.map((option, index) => (
-            <option className="capitalize" key={index} value={option.toLowerCase()}>
-              {option}
-            </option>
-          ))}
+          {options.map(({ option, value }, index) => {
+            console.log(option, value)
+            return (
+              <option className="capitalize" key={index} value={value}>
+                {option}
+              </option>
+            )
+          })}
         </select>
         {error && <p className="text-warning py-1">{error.message}</p>}
       </div>
