@@ -27,7 +27,6 @@ function Dropzone({
   }, [])
 
   const showUploadArea = !minimalist || (minimalist && acceptedFiles.length <= 0)
-  console.log(showUploadArea)
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { "image/*": [] }, maxSize, maxFiles })
 
