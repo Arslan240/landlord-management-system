@@ -12,7 +12,7 @@ const TenantDetailsForm = ({ acceptedFiles, setAcceptedFiles, watch, register, e
   const offlineTenant = watch("isOffline")
 
   return (
-    <>
+    <div className="pb-4">
       {/* <form onSubmit={handleSubmit((data) => onSubmit(data))}> */}
       <h1 className="text-2xl font-medium">Tenant Details</h1>
       <CheckBoxInput label={"Is tenant offline?"} name={"isOffline"} {...register("isOffline")} error={errors["isOffline"]} />
@@ -109,7 +109,7 @@ const TenantDetailsForm = ({ acceptedFiles, setAcceptedFiles, watch, register, e
         Submit
       </button> */}
       {/* </form> */}
-    </>
+    </div>
   )
 }
 
