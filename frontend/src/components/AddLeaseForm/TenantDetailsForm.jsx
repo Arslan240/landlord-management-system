@@ -11,13 +11,6 @@ import { validateDate } from "../../utils/validateDate"
 const TenantDetailsForm = ({ acceptedFiles, setAcceptedFiles, watch, register, errors }) => {
   const offlineTenant = watch("isOffline")
 
-  const onSubmit = (data) => {
-    // e.preventDefault()
-    console.log(offlineTenant)
-    console.log(data)
-    console.log("acceptedFiles: ", acceptedFiles)
-  }
-
   return (
     <>
       {/* <form onSubmit={handleSubmit((data) => onSubmit(data))}> */}
