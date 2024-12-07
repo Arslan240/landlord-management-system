@@ -98,7 +98,7 @@ const TenantDetailsForm = () => {
               flexChild
             />
             <div>
-              <label className="font-medium mt-3 inline-block">Tenant Image</label>
+              <label className="font-medium inline-block">Tenant Image</label>
               <Dropzone
                 acceptedFiles={acceptedFiles}
                 setAcceptedFiles={setAcceptedFiles}
