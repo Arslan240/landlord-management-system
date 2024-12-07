@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom"
+import { Link, useLoaderData } from "react-router-dom"
 import FormInput from "../FormInput"
 import FormTextArea from "../FormTextArea"
 import { SelectInput } from "../SelectInput"
@@ -26,15 +26,30 @@ const PropertyDetailsForm = ({ register, errors }) => {
       {/* <form onSubmit={handleSubmit((data) => onSubmit(data))}> */}
       <h1 className="text-2xl font-medium pb-2">Property Details</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        {/* {selectOptions.length <= 0 ? ( */}
+        <div className={`${selectOptions.length > 0 ? "hidden" : ""}`}>
+          <label htmlFor="" className="block text-sm font-medium mb-1 capitalize">
+            No properties Available
+          </label>
+          <Link to={"/dashboard/properties/add-property?redirect=/dashboard/leases/add-lease"}>
+            <button type="button" className="btn btn-sm btn-success text-white">
+              Add new property
+            </button>
+          </Link>
+          {errors["propertyId"] && <p className="text-warning py-1">{errors["propertyId"].message}</p>}
+        </div>
+        {/* ) : ( */}
         <SelectInput
-          label={"Select Property"}
+          label={"Select from your properties"}
           name={"propertyId"}
           options={selectOptions}
           {...register("propertyId")}
           error={errors["propertyId"]}
           flexChild
           small
+          hidden={selectOptions.length <= 0}
         />
+        {/* )} */}
         <FormInput
           label={"Rent Amount"}
           type={"text"}
