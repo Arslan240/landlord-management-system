@@ -17,6 +17,7 @@ const propertySelectOptions = (properties) => {
 const PropertyDetailsForm = ({ register, errors }) => {
   const loaderData = useLoaderData()
   const { properties } = loaderData
+  // TODO: if properties is an empty array or null/undefined. Don't show propertyDetails form at all and only show button to add property. As it's hard to integrate the button with react hook form. inside onSubmit just check the loader data if no properties, then show error under the button.
 
   const selectOptions = propertySelectOptions(properties)
 
