@@ -15,7 +15,8 @@ customFetch.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response && error.response.status === 401) {
-      toast.error("Session Expired. Please login again")
+      // toast.error("Session Expired. Please login again")
+      toast.error(error.response.data) //server error
       store.dispatch(logout())
       window.location.href("/login")
     }
