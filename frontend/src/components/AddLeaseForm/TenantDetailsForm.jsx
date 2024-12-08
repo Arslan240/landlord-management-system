@@ -30,6 +30,18 @@ const TenantDetailsForm = ({ acceptedFiles, setAcceptedFiles, watch, register, e
           })}
           error={errors["name"]}
         />
+        <FormInput
+          label={"Govt identification number"}
+          type={"text"}
+          name={"idNumber"}
+          small
+          placeholder={"XXHJHDJJDJU"}
+          {...register("idNumber", {
+            required: "Please provide govt identification number",
+          })}
+          error={errors["idNumber"]}
+          flexChild
+        />
         {offlineTenant ? (
           <>
             <FormInput
@@ -55,18 +67,6 @@ const TenantDetailsForm = ({ acceptedFiles, setAcceptedFiles, watch, register, e
                 validate: validateDate,
               })}
               error={errors["dob"]}
-              flexChild
-            />
-            <FormInput
-              label={"Govt identification number"}
-              type={"text"}
-              name={"idNumber"}
-              small
-              placeholder={"XXHJHDJJDJU"}
-              {...register("idNumber", {
-                required: "Please provide govt identification number",
-              })}
-              error={errors["idNumber"]}
               flexChild
             />
             <FormInput
