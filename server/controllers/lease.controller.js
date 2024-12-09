@@ -19,7 +19,7 @@ const addLease = async (req, res) => {
 
   // if online tenant, send email of lease request to user's email
   if (!isOffline) {
-    await onlineTenantLeaseController({ tenantDetails, propertyDetails })
+    await onlineTenantLeaseController({ tenantDetails, propertyDetails, userId: req.user.id })
   }
 
   // if tenant is offline and we need to call add tenant controller from here, then call add lease controller with property id and newly created tenant id
@@ -35,7 +35,7 @@ module.exports = {
   addLease,
 }
 
-async function onlineTenantLeaseController({ propertyDetails, tenantDetails }) {
+async function onlineTenantLeaseController({ propertyDetails, tenantDetails, userId }) {
   const { name, email, idNumber, occupation } = tenantDetails
   const { propertyId, rent, deposit, startDate, endDate, terms } = propertyDetails
 
