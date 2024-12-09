@@ -14,7 +14,7 @@ const customFetch = axios.create({
 customFetch.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response && error.response.status === 401) {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
       // toast.error("Session Expired. Please login again")
       toast.error(error.response.data) //server error
       store.dispatch(logout())
