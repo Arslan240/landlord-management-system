@@ -3,6 +3,7 @@ const { BadRequestError, UnAuthenticateError, NotFoundError } = require("../erro
 const { User } = require("../models/User.model")
 const Lease = require("../models/Lease.model")
 const Property = require("../models/Property.model")
+const sendLeaseAcceptanceEmail = require("../utils/sendLeaseAcceptanceEmail")
 
 const getLeases = async (req, res) => {
   res.send("Get Leases")
@@ -29,19 +30,21 @@ const addLease = async (req, res) => {
 
     const propertyOwns = await Property.findOne({ _id: propertyId })
     if (!propertyOwns) {
-      throw new NotFoundError("Property not found. Please check your details")
+      throw new NotFoundError("Property not found. Please check property details")
     }
 
     if (propertyOwns.owner !== req.user.id) {
-      // invalidate the refresh token first
       throw new UnAuthenticateError("Access denied. Please verify your credentials")
     }
 
     const lease = await Lease.create({ propertyId, rent, deposit, startDate, endDate, terms })
     if (!lease) {
-      console.log("Lease not created in lease.controller.js for offline tenant")
-      throw new Error("Something went wrong")
+      throw new Error("Lease didn't create, Please try again")
     }
+
+    await sendLeaseAcceptanceEmail({ email, name, leaseDetails: { address: propertyOwns.address, leaseId: lease._id } })
+    console.log("Accept lease email sent successfully")
+    res.status(StatusCodes.CREATED).json({ msg: `Lease request is sent to ${name}. Please wait patiently, you'll be notified on acceptance.` })
   }
 
   // if tenant is offline and we need to call add tenant controller from here, then call add lease controller with property id and newly created tenant id
