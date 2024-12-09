@@ -34,6 +34,7 @@ import { action as verifyAction } from "./pages/VerifyEmail"
 import { store } from "./redux/store"
 import { addTenantPropertyLoader } from "./pages/AddTenant"
 import { addLeaseLoader } from "./pages/AddLease"
+import AcceptLease, { acceptLeaseLoader } from "./pages/AcceptLease"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,6 +85,11 @@ const router = createBrowserRouter([
             path: "leases/add-lease",
             element: <AddLease />,
             loader: addLeaseLoader(queryClient),
+          },
+          {
+            path: "leases/accept-lease",
+            element: <AcceptLease />,
+            loader: acceptLeaseLoader(queryClient),
           },
           {
             path: "maintenance",
