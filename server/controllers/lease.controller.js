@@ -1,4 +1,5 @@
 const { StatusCodes } = require("http-status-codes")
+const mongoose = require("mongoose")
 const { BadRequestError, UnAuthenticateError, NotFoundError } = require("../errors")
 const { User } = require("../models/User.model")
 const Lease = require("../models/Lease.model")
@@ -10,6 +11,15 @@ const { addLeaseService } = require("../services/leaseService")
 const getLeases = async (req, res) => {
   res.send("Get Leases")
 }
+
+const getSingleLease = async (req, res) => {
+  const { id } = req.params
+
+  const lease = await Lease.findOne({ _id: id }).populate("propertyId", "owner")
+
+  res.json({ lease: lease })
+}
+
 const addLease = async (req, res) => {
   const { tenantDetails, propertyDetails } = req.body
   const { isOffline, name, email, idNumber, occupation, dob, salary } = tenantDetails
@@ -47,6 +57,7 @@ const addLease = async (req, res) => {
 
 module.exports = {
   getLeases,
+  getSingleLease,
   addLease,
 }
 
