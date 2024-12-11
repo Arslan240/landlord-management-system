@@ -1,3 +1,5 @@
+import customFetch from "./customFetch"
+
 export const getPresignedUrls = async (fileNames) => {
   try {
     const { data } = await customFetch.post("upload/getsignedurls", {

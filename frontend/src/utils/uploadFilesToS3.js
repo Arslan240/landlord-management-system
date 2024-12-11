@@ -1,3 +1,5 @@
+import axios from "axios"
+
 export const uploadFilesToS3 = async (urls, files) => {
   try {
     const promisesArr = urls.map((url, index) => {
