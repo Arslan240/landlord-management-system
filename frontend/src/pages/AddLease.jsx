@@ -1,6 +1,6 @@
 import { customFetch } from "../utils"
 import FormWrapper from "../components/FormWrapper"
-import { useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import OutletPageWrapper from "../components/OutletPageWrapper"
 import RequireAuth from "../components/RequireAuth"
 import { AnimatePresence } from "motion/react"
@@ -32,6 +32,7 @@ export const addLeaseLoader =
 
 const AddLease = () => {
   // in property dropdown, when you select a property then navigate to the page where property id
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const prop = searchParams.get("prop")
   const redirect = searchParams.get("redirect")
@@ -54,41 +55,49 @@ const AddLease = () => {
   })
 
   const onSubmit = async (data) => {
-    const { propertyId, rent, deposit, startDate, endDate, terms, isOffline, name, email, occupation, dob, idNumber, salary, imageId } = data
+    const { propertyId, rent, deposit, startDate, endDate, terms, isOffline, name, email, occupation, dob, idNumber, salary } = data
+    let imageId
     console.log(acceptedFiles)
 
-    if (isOffline) {
-      // const urls = await getPresignedUrls(acceptedFiles[0]) //only 1 file for user image
-      // const ids = await uploadFilesToS3(urls, [acceptedFiles[0]]) //a new array with only first image
-    }
-
-    let propertyDetails = {
-      propertyId,
-      rent,
-      deposit,
-      startDate,
-      endDate,
-      terms,
-    }
-    const tenantDetails = {
-      isOffline,
-      name,
-      email,
-      occupation,
-      dob,
-      idNumber,
-      salary,
-      imageId,
-    }
     try {
+      if (isOffline && acceptedFiles.length > 0) {
+        const formattedFiles = acceptedFiles.map(({ name, type }) => ({
+          name,
+          fileType: type,
+        }))
+        const urls = await getPresignedUrls(formattedFiles) //only 1 file for user image
+        const ids = await uploadFilesToS3(urls, [acceptedFiles[0]]) //a new array with only first image
+        imageId = ids[0]
+      }
+
+      let propertyDetails = {
+        propertyId,
+        rent,
+        deposit,
+        startDate,
+        endDate,
+        terms,
+      }
+      const tenantDetails = {
+        isOffline,
+        name,
+        email,
+        occupation,
+        dob,
+        idNumber,
+        salary,
+        imageId,
+      }
       const { data: leaseData } = await customFetch.post("leases", { tenantDetails, propertyDetails })
-      const { msg } = leaseData
+      const { data, msg } = leaseData
       toast.success(msg)
+      if (isOffline && data) {
+        const { _id: leaseId } = data
+        navigate(`/dashboard/leases/${leaseId}`)
+      }
     } catch (error) {
       toast.error(error.message)
     }
-    console.log(propertyDetails)
-    console.log(tenantDetails)
   }
 
   return (
