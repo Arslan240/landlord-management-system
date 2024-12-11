@@ -1,5 +1,6 @@
 const { BadRequestError } = require("../errors")
 const { Tenant } = require("../models/Tenant.model")
+const { addTenantService } = require("../services/tenantService")
 
 // find only those tenants which are associated to current landlord user
 // also only allow this route to landlord role
@@ -11,45 +12,22 @@ const getTenants = async (req, res) => {
 }
 
 const addTenant = async (req, res) => {
-  const { name, dob, occupation, idNumber, salary, imageUrl, isOffline } = req.body
+  const { name, dob, occupation, idNumber, salary, imageUrl, isOffline, email } = req.body
+
+  if (!isOffline) {
+    if (!name || !email || !idNumber) {
+      throw new BadRequestError("Please provide Name, Email and Govt Id number for an online tenant.")
+    }
+  }
+
+  if (isOffline) {
+    if (!name || !dob || !occupation || !idNumber || !email) {
+      throw new BadRequestError("Please provide all the values for Name, Date of Birth, Occupation and Govt Identification")
+    }
+  }
 
   const createdBy = req.user.id //landlord id
-  let tenantObject = {}
-
-  // for offline user, createdBy can't be null
-  if (isOffline) {
-    if (!createdBy) {
-      throw new BadRequestError("For an offline tenant, please specify the creator.")
-    }
-
-    tenantObject["createdBy"] = createdBy
-  }
-
-  // for registered tenant, his id is necessary.
-  const user = null // when registered tenant accepts the lease then this will be populated maybe through the request made from that controller of accept lease
-  if (!isOffline) {
-    if (!user) {
-      throw new BadRequestError("For a registered tenant, please provide tenant id")
-    }
-
-    tenantObject["user"] = user
-  }
-
-  if (!name || !dob || !occupation || !idNumber) {
-    throw new BadRequestError("Please provide all the values for Name, Date of Birth, Occupation and Govt Identification")
-  }
-
-  tenantObject = {
-    ...tenantObject,
-    name,
-    dob,
-    occupation,
-    idNumber,
-    salary,
-    imageUrl,
-  }
-
-  const tenant = await Tenant.create(tenantObject)
+  const tenant = await addTenantService({ isOffline, createdBy, name, email, dob, occupation, idNumber, salary, imageUrl })
 
   res.send({ msg: "Tenant created successfully", data: tenant })
 }
