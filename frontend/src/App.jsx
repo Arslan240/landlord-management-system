@@ -35,6 +35,7 @@ import { store } from "./redux/store"
 import { addTenantPropertyLoader } from "./pages/AddTenant"
 import { addLeaseLoader } from "./pages/AddLease"
 import AcceptLease, { acceptLeaseLoader } from "./pages/AcceptLease"
+import SingleLease, { singleLeaseLoader } from "./pages/SingleLease"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -80,6 +81,11 @@ const router = createBrowserRouter([
           {
             path: "leases",
             element: <Leases />,
+          },
+          {
+            path: "leases/:id",
+            element: <SingleLease />,
+            loader: singleLeaseLoader(queryClient),
           },
           {
             path: "leases/add-lease",
