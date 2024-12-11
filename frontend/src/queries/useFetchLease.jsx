@@ -4,7 +4,7 @@ import { customFetch } from "../utils"
 
 export const fetchLease = async (leaseId) => {
   const { data } = await customFetch(`leases/${leaseId}`)
-  return data?.data
+  return data.lease
 }
 
 const useFetchLease = ({ leaseId }) => {
