@@ -4,6 +4,8 @@ const { User } = require("../models/User.model")
 const Lease = require("../models/Lease.model")
 const Property = require("../models/Property.model")
 const sendLeaseAcceptanceEmail = require("../utils/sendLeaseAcceptanceEmail")
+const { addTenantService } = require("../services/tenantService")
+const { addLeaseService } = require("../services/leaseService")
 
 const getLeases = async (req, res) => {
   res.send("Get Leases")
@@ -13,21 +15,34 @@ const addLease = async (req, res) => {
   const { isOffline, name, email, idNumber, occupation, dob, salary } = tenantDetails
   const { propertyId, rent, deposit, startDate, endDate, terms } = propertyDetails
 
+  if (!name || !idNumber) {
+    throw new BadRequestError("Please provide Name, Email, and Govt Id of tenant")
+  }
+
   if (!propertyId || !rent || !startDate) {
     throw new BadRequestError("Please provide Property, Rent and startDate for lease")
   }
 
+  const ownerId = req.user.id
+
   // if online tenant, send email of lease request to user's email
   if (!isOffline) {
-    await onlineTenantLeaseController({ tenantDetails, propertyDetails, userId: req.user.id })
+    await onlineTenantLeaseController({ tenantDetails, propertyDetails, userId: ownerId, res })
+    return
   }
+
+  // if tenant offline
+  if (!occupation || !dob) {
+    throw new BadRequestError("Please provide Occupation and Date of birth for an offline tenant.")
+  }
+  const tenant = await addTenantService({ ...tenantDetails, createdBy: ownerId })
+  const lease = await addLeaseService({ tenantDetails: { ...tenantDetails, ...tenant }, propertyDetails, landlordId: ownerId })
 
   // if tenant is offline and we need to call add tenant controller from here, then call add lease controller with property id and newly created tenant id
   // landlord should own the property, if not then unauthorised error, also maybe invalid the refresh token, and logout the user.
   // if already rejected / cancelled, you can't change the status
 
-  res.send({ msg: "Add new Lease", body: req.body })
-  // return res.status(StatusCodes.OK).json({ msg: `Email sent successfully to ${name} at ${email}. Please wait for acceptance of lease.` })
+  res.status(StatusCodes.CREATED).json({ msg: "Lease added successfully", data: lease })
 }
 
 module.exports = {
@@ -35,12 +50,12 @@ module.exports = {
   addLease,
 }
 
-async function onlineTenantLeaseController({ propertyDetails, tenantDetails, userId }) {
-  const { name, email, idNumber, occupation } = tenantDetails
-  const { propertyId, rent, deposit, startDate, endDate, terms } = propertyDetails
+// extract lease service from it, maybe online tenant lease service, offline tenant lease service
+async function onlineTenantLeaseController({ propertyDetails, tenantDetails, userId, res }) {
+  const { name, email, idNumber } = tenantDetails
 
-  if (!email || !name || !idNumber || !occupation) {
-    throw new BadRequestError("Please provide Name, Email, Occupation and Govt Id of tenant")
+  if (!email) {
+    throw new BadRequestError("Please provide email for online tenant.")
   }
 
   const tenant = await User.findOne({ email, idNumber })
@@ -48,21 +63,11 @@ async function onlineTenantLeaseController({ propertyDetails, tenantDetails, use
     throw new BadRequestError(`Tenant with ${email} and Govt Id ${idNumber} doesn't exist. Please correct tenant details and submit again`)
   }
 
-  const propertyOwns = await Property.findOne({ _id: propertyId })
-  if (!propertyOwns) {
-    throw new NotFoundError("Property not found. Please check property details")
-  }
-
-  if (propertyOwns.owner !== userId) {
-    throw new UnAuthenticateError("Access denied. Please verify your credentials")
-  }
-
-  const lease = await Lease.create({ propertyId, rent, deposit, startDate, endDate, terms })
+  const lease = await addLeaseService({ tenantDetails, propertyDetails, landlordId: userId })
   if (!lease) {
-    throw new Error("Lease didn't create, Please try again")
+    throw new Error("Something went wrong. Please try again.")
   }
-
-  await sendLeaseAcceptanceEmail({ email, name, leaseDetails: { address: propertyOwns.address, leaseId: lease._id } })
-  console.log("Accept lease email sent successfully")
-  res.status(StatusCodes.CREATED).json({ msg: `Lease request is sent to ${name}. Please wait patiently, you'll be notified on acceptance.` })
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ msg: `Lease request is sent to ${name}. Please wait patiently, you'll be notified when tenant accepts the lease.` })
 }
