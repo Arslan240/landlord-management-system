@@ -1,4 +1,4 @@
-const sendEmail = require("./sendEmail")
+const { sendEmail } = require("./sendEmail")
 
 const sendLeaseAcceptanceEmail = async ({ email, name, leaseDetails, origin }) => {
   const { address, leaseId } = leaseDetails
