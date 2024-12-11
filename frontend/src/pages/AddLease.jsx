@@ -11,6 +11,7 @@ import PropertyDetailsForm from "../components/AddLeaseForm/PropertyDetailsForm"
 import { useForm } from "react-hook-form"
 import { getPresignedUrls } from "../utils/getPresignedUrls"
 import { uploadFilesToS3 } from "../utils/uploadFilesToS3"
+import SubmitBtn from "../components/SubmitBtn"
 
 export const addLeaseLoader =
   (queryClient) =>
@@ -44,7 +45,7 @@ const AddLease = () => {
 
   const {
     register,
-    formState: { errors, isLoading, isSubmitSuccessful },
+    formState: { errors, isLoading, isSubmitSuccessful, isSubmitting },
     watch,
     handleSubmit,
   } = useForm({
@@ -81,6 +82,8 @@ const AddLease = () => {
     }
     try {
       const { data: leaseData } = await customFetch.post("leases", { tenantDetails, propertyDetails })
+      const { msg } = leaseData
+      toast.success(msg)
     } catch (error) {
       toast.error(error.message)
     }
@@ -94,9 +97,7 @@ const AddLease = () => {
         <form onSubmit={handleSubmit((data) => onSubmit(data))}>
           <TenantDetailsForm register={register} errors={errors} acceptedFiles={acceptedFiles} setAcceptedFiles={setAcceptedFiles} watch={watch} />
           <PropertyDetailsForm register={register} errors={errors} />
-          <button type="submit" className="btn btn-secondary btn-md text-white mt-4">
-            Create Lease
-          </button>
+          <SubmitBtn text={"Create Lease"} classNames={"btn-md"} formSubmitting={isSubmitting} />
         </form>
       </FormWrapper>
     </OutletPageWrapper>
