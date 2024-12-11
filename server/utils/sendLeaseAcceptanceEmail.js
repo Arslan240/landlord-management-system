@@ -9,7 +9,7 @@ const sendLeaseAcceptanceEmail = async ({ email, name, leaseDetails, origin }) =
     <p>Dear ${name}, you have a new lease request for property at ${address.street}, ${address.postalCode}.
         Please click following button to accept the request
     </p>
-      <a href="http:localhost:5173/leases/accept-lease?leaseId=${leaseId}">Accept lease</a>
+      <a href="http:localhost:5173/dashboard/leases/accept-lease?leaseId=${leaseId}">Accept lease</a>
     `,
   })
 }
