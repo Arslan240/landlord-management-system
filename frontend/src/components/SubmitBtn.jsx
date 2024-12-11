@@ -1,25 +1,23 @@
 import { useNavigation } from "react-router-dom"
 
-const SubmitBtn = ({ text }) => {
+const SubmitBtn = ({ text, formSubmitting, classNames, fullWidth }) => {
   const navigation = useNavigation()
-  const isSubmitting = navigation.state === 'submitting'
+  const isSubmitting = formSubmitting || navigation.state === "submitting"
 
   return (
     <button
       type="submit"
-      className="btn my-4 btn-secondary btn-block disabled:bg-secondary-light"
+      className={`btn my-4 btn-secondary ${fullWidth ? "btn-block" : ""} disabled:bg-secondary-light ${classNames}`}
       disabled={isSubmitting}
     >
-      {
-        isSubmitting ? (
-          <>
-            <span className="loading loading-spinner" />
-            Loading
-          </>
-        ) : (
-          text || 'submit'
-        )
-      }
+      {isSubmitting ? (
+        <>
+          <span className="loading loading-spinner" />
+          Loading
+        </>
+      ) : (
+        text || "submit"
+      )}
     </button>
   )
 }
