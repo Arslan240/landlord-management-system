@@ -5,7 +5,8 @@ const sendLeaseAcceptanceEmail = require("../utils/sendLeaseAcceptanceEmail")
 
 async function addLeaseService({ tenantDetails, propertyDetails, landlordId }) {
   const { propertyId, rent, deposit, startDate, endDate, terms } = propertyDetails
-  const { isOffline, email, name, _id: tenantId } = tenantDetails
+  const { email, tenant } = tenantDetails
+  const { isOffline, name, _id: tenantId } = tenant
 
   if (!isOffline && !email) {
     throw new BadRequestError("Please provide email for an online user")
