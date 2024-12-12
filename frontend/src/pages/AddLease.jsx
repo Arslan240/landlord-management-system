@@ -25,7 +25,8 @@ export const addLeaseLoader =
         },
       })
     } catch (error) {
-      toast.error(error.message)
+      const errorMessage = getErrorMessage(error)
+      toast.error(errorMessage)
       return error
     }
   }

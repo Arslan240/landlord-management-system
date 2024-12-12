@@ -2,6 +2,7 @@ import { fetchLease } from "../queries/useFetchLease"
 import { useLoaderData } from "react-router-dom"
 import { toast } from "react-toastify"
 import OutletPageWrapper from "../components/OutletPageWrapper"
+import { getErrorMessage } from "../utils"
 
 export const singleLeaseLoader =
   (queryClient) =>
@@ -14,7 +15,8 @@ export const singleLeaseLoader =
         queryFn: () => fetchLease(leaseId),
       })
     } catch (error) {
-      toast.error(error.message)
+      const errorMessage = getErrorMessage(error)
+      toast.error(errorMessage)
       return error
     }
   }

@@ -3,7 +3,7 @@ import FormInput from "../components/FormInput"
 import HomeIcon from "../components/HomeIcon"
 import SubmitBtn from "../components/SubmitBtn"
 import CentreTemplate from "./CentreTemplate"
-import { customFetch } from "../utils"
+import { customFetch, getErrorMessage } from "../utils"
 import { toast } from "react-toastify"
 import { store } from "../redux/store"
 import { register } from "../redux/userSlice"
@@ -25,11 +25,8 @@ export const action = async ({ request }) => {
 
     return redirect("/email-verification")
   } catch (error) {
-    console.log(error.message)
-    const errorMessage = error?.response?.data?.msg || error?.response?.statusText || error.message || "Something Went Wrong"
-
+    const errorMessage = getErrorMessage(error)
     toast.error(errorMessage)
-
     return null
   }
 }
