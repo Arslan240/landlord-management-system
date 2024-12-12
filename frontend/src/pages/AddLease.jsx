@@ -1,4 +1,4 @@
-import { customFetch } from "../utils"
+import { customFetch, getErrorMessage } from "../utils"
 import FormWrapper from "../components/FormWrapper"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import OutletPageWrapper from "../components/OutletPageWrapper"
@@ -96,7 +96,8 @@ const AddLease = () => {
         navigate(`/dashboard/leases/${leaseId}`)
       }
     } catch (error) {
-      toast.error(error.message)
+      const errorMessage = getErrorMessage(error)
+      toast.error(errorMessage)
     }
   }
 
