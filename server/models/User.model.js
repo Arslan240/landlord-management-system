@@ -32,6 +32,7 @@ const UserSchema = new mongoose.Schema({
   idNumber: {
     type: String,
     required: [true, ["Please provide govt identification number"]],
+    unique: true,
   },
   verificationToken: String,
   verifiedDate: Date,
