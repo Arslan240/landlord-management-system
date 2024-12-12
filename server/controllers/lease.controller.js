@@ -45,8 +45,9 @@ const addLease = async (req, res) => {
   if (!occupation || !dob) {
     throw new BadRequestError("Please provide Occupation and Date of birth for an offline tenant.")
   }
+
   const tenant = await addTenantService({ ...tenantDetails, createdBy: ownerId })
-  const lease = await addLeaseService({ tenantDetails: { ...tenantDetails, ...tenant }, propertyDetails, landlordId: ownerId })
+  const lease = await addLeaseService({ tenantDetails: { email, tenant }, propertyDetails, landlordId: ownerId })
 
   // if tenant is offline and we need to call add tenant controller from here, then call add lease controller with property id and newly created tenant id
   // landlord should own the property, if not then unauthorised error, also maybe invalid the refresh token, and logout the user.
