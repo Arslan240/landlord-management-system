@@ -1,7 +1,7 @@
 import React from "react"
 import Avatar from "./Avatar"
 
-const TableRenderer = ({ headings, valueRows, badgeIndex, successTerm, small = false }) => {
+const TableRenderer = ({ headings, valueRows, successTerm, small = false }) => {
   return (
     <div className="overflow-x-auto pt-2 pb-2 ">
       <table className="table-auto rounded-lg w-full  shadow-md">
@@ -16,7 +16,7 @@ const TableRenderer = ({ headings, valueRows, badgeIndex, successTerm, small = f
         </thead>
         <tbody>
           {valueRows.map((valueRow, index) => (
-            <TableRow row={valueRow} index={index} badgeIndex={badgeIndex} successTerm={successTerm} small={small} />
+            <TableRow row={valueRow} index={index} successTerm={successTerm} small={small} />
           ))}
         </tbody>
       </table>
@@ -24,14 +24,14 @@ const TableRenderer = ({ headings, valueRows, badgeIndex, successTerm, small = f
   )
 }
 
-const TableRow = ({ row, index, clickHandler, badgeIndex, successTerm, small }) => {
+const TableRow = ({ row, index, clickHandler, successTerm, small }) => {
   return (
     <tr className="border-b text-xs bg-[#fafafa] hover:bg-indigo-50 cursor-pointer" onClick={clickHandler}>
       <td className="px-6">{index + 1}</td>
 
-      {row.map((value, index) => (
+      {row.map(({ type, value }, index) => (
         <>
-          {badgeIndex === index ? (
+          {type === "badge" ? (
             <td className={`px-6 ${small ? "py-2" : "py-3"}`}>
               <span
                 className={`${
@@ -42,12 +42,14 @@ const TableRow = ({ row, index, clickHandler, badgeIndex, successTerm, small }) 
               </span>
             </td>
           ) : (
-            <td className={`px-6 ${small ? "py-2" : "py-3"}`}>
-              <div className="flex flex-row items-center gap-1.5">
-                {index === 0 && <Avatar small />}
-                {value}
-              </div>
-            </td>
+            <>
+              <td className={`px-6 ${small ? "py-2" : "py-3"}`}>
+                <div className="flex flex-row items-center gap-1.5">
+                  {type === "avatar" && <Avatar small />}
+                  {value}
+                </div>
+              </td>
+            </>
           )}
         </>
       ))}

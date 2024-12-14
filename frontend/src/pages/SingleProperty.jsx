@@ -6,6 +6,7 @@ import OutletPageWrapper from "../components/OutletPageWrapper"
 import Carousel from "../components/Carousel"
 import TableRenderer from "../components/TableRenderer"
 import RequireAuth from "../components/RequireAuth"
+import { tenantValues } from "../tenantValues"
 
 const getIdFromPathname = (pathname) => {
   const regex = /[^/]+$/
@@ -17,12 +18,12 @@ const getAddress = (address) => {
 }
 
 const tenantHeadings = ["Name", "Email", "Lease End", "Rent", "Availability"]
-const tenantValues = [
-  ["Joseph", "joseph@gmail.com", "12 Dec, 2029", "$299", "available"],
-  ["Emily", "emily@gmail.com", "19 March, 2028", "$800", "occupied"],
-  ["Abraham", "abraham@gmail.com", "23 Jan, 2030", "$340", "available"],
-  ["Hailey", "hailey@gmail.com", "9 August, 2025", "$670", "occupied"],
-]
+// const tenantValues = [
+//   ["Joseph", "joseph@gmail.com", "12 Dec, 2029", "$299", "available"],
+//   ["Emily", "emily@gmail.com", "19 March, 2028", "$800", "occupied"],
+//   ["Abraham", "abraham@gmail.com", "23 Jan, 2030", "$340", "available"],
+//   ["Hailey", "hailey@gmail.com", "9 August, 2025", "$670", "occupied"],
+// ]
 
 const cloudfront = "https://d299qmc6osrfqv.cloudfront.net"
 
@@ -112,7 +113,7 @@ const SingleProperty = () => {
               </Link>
             </div>
           </div>
-          <TableRenderer headings={tenantHeadings} valueRows={tenantValues} badgeIndex={tenantHeadings.length - 1} successTerm={"available"} small />
+          <TableRenderer headings={tenantHeadings} valueRows={tenantValues} successTerm={"available"} small />
         </div>
         <div>
           <div className="flex flex-col justify-between md:flex-row ">
@@ -124,7 +125,7 @@ const SingleProperty = () => {
               </Link>
             </div>
           </div>
-          <TableRenderer headings={tenantHeadings} valueRows={tenantValues} small />
+          <TableRenderer headings={tenantHeadings} valueRows={tenantValues} successTerm={"available"} small />
         </div>
         <div>
           <div className="flex flex-col justify-between md:flex-row ">
@@ -141,7 +142,7 @@ const SingleProperty = () => {
               </Link>
             </div>
           </div>
-          <TableRenderer headings={tenantHeadings} valueRows={tenantValues} small />
+          <TableRenderer headings={tenantHeadings} valueRows={tenantValues} successTerm={"available"} small />
         </div>
       </div>
     </OutletPageWrapper>
