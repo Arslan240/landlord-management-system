@@ -35,6 +35,13 @@ const SidebarRenderer = () => {
       to: "/dashboard/leases",
       active: location.pathname.includes("/dashboard/leases"),
       alert: false,
+      subRoutes: [
+        {
+          text: "Lease Requests",
+          to: "/dashboard/leases/lease-requests",
+          active: location.pathname.includes("/dashboard/leases/lease-requests"),
+        },
+      ],
     },
     {
       icon: <Pickaxe size={iconSize} strokeWidth={strokeWidth} color="#FEB913" />,
