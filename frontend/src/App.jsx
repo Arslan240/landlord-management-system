@@ -36,6 +36,7 @@ import { addTenantPropertyLoader } from "./pages/AddTenant"
 import { addLeaseLoader } from "./pages/AddLease"
 import AcceptLease, { acceptLeaseLoader } from "./pages/AcceptLease"
 import SingleLease, { singleLeaseLoader } from "./pages/SingleLease"
+import LeaseRequests from "./pages/LeaseRequests"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -83,11 +84,6 @@ const router = createBrowserRouter([
             element: <Leases />,
           },
           {
-            path: "leases/:id",
-            element: <SingleLease />,
-            loader: singleLeaseLoader(queryClient),
-          },
-          {
             path: "leases/add-lease",
             element: <AddLease />,
             loader: addLeaseLoader(queryClient),
@@ -96,6 +92,15 @@ const router = createBrowserRouter([
             path: "leases/accept-lease",
             element: <AcceptLease />,
             loader: acceptLeaseLoader(queryClient),
+          },
+          {
+            path: "leases/requests",
+            element: <LeaseRequests />,
+          },
+          {
+            path: "leases/:id",
+            element: <SingleLease />,
+            loader: singleLeaseLoader(queryClient),
           },
           {
             path: "maintenance",
