@@ -2,7 +2,7 @@ const { sendEmail } = require("./sendEmail")
 
 const sendLeaseAcceptanceEmail = async ({ email, name, leaseDetails, origin }) => {
   const { address, leaseId } = leaseDetails
-  sendEmail({
+  await sendEmail({
     to: email,
     subject: `Rently - Lease Acceptance Request for property at ${address.street}, ${address.postalCode}`,
     html: `<h2>Lease Request for property at ${address.street}, ${address.postalCode}</h2> 
