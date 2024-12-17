@@ -64,7 +64,7 @@ module.exports = {
 
 // extract lease service from it, maybe online tenant lease service, offline tenant lease service
 async function onlineTenantLeaseController({ propertyDetails, tenantDetails, userId, res }) {
-  const { name, email, idNumber } = tenantDetails
+  const { name, email, idNumber, isOffline } = tenantDetails
 
   if (!email) {
     throw new BadRequestError("Please provide email for online tenant.")
@@ -75,7 +75,7 @@ async function onlineTenantLeaseController({ propertyDetails, tenantDetails, use
     throw new BadRequestError(`Tenant with ${email} and Govt Id ${idNumber} doesn't exist. Please correct tenant details and submit again`)
   }
 
-  const lease = await addLeaseService({ tenantDetails, propertyDetails, landlordId: userId })
+  const lease = await addLeaseService({ tenantDetails: { email, tenant: tenantDetails }, propertyDetails, landlordId: userId })
   if (!lease) {
     throw new Error("Something went wrong. Please try again.")
   }
