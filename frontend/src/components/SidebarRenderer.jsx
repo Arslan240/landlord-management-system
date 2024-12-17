@@ -1,7 +1,19 @@
-import { BriefcaseBusiness, Building, FileUser, HandCoins, LayoutGrid, MessageCircle, Pickaxe, Settings, SquareUserRound } from "lucide-react"
+import {
+  BriefcaseBusiness,
+  Building,
+  FileUser,
+  KeyRound,
+  HandCoins,
+  LayoutGrid,
+  MessageCircle,
+  Pickaxe,
+  Settings,
+  SquareUserRound,
+} from "lucide-react"
 import { useLocation } from "react-router-dom"
 import Sidebar, { SidebarItem } from "./Sidebar"
 
+const subIconSize = "1.2rem"
 const iconSize = "1.4rem"
 const strokeWidth = "1.6px"
 
@@ -37,9 +49,10 @@ const SidebarRenderer = () => {
       alert: false,
       subRoutes: [
         {
+          icon: <KeyRound size={subIconSize} strokeWidth={strokeWidth} />,
           text: "Lease Requests",
-          to: "/dashboard/leases/lease-requests",
-          active: location.pathname.includes("/dashboard/leases/lease-requests"),
+          to: "/dashboard/leases/requests",
+          active: location.pathname.includes("/dashboard/leases/requests"),
         },
       ],
     },
