@@ -112,7 +112,7 @@ const SubMenu = ({ isSubExpanded, menuItems }) => {
   if (!menuItems || menuItems?.length <= 0) return
 
   return (
-    <div className={`grid ${isSubExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"} transition-all delay-150 ease-in-out`}>
+    <div className={`ml-4 grid ${isSubExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"} transition-all delay-150 ease-in-out`}>
       <div className="overflow-hidden">
         {menuItems.map((item) => (
           <SidebarItem {...item} small />
