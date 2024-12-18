@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { customFetch } from "../utils"
+import { customFetch, getAddressFromObject } from "../utils"
 import Loading from "../components/Loading"
 import { Link, useLocation, useNavigation } from "react-router-dom"
 import OutletPageWrapper from "../components/OutletPageWrapper"
@@ -11,10 +11,6 @@ import { tenantValues } from "../tenantValues"
 const getIdFromPathname = (pathname) => {
   const regex = /[^/]+$/
   return pathname.match(regex)[0]
-}
-
-const getAddress = (address) => {
-  return `${address.plotNo}, ${address.street}, ${address.city}, ${address.state}, ${address.postalCode}`
 }
 
 const tenantHeadings = ["Name", "Email", "Lease End", "Rent", "Availability"]
@@ -79,7 +75,7 @@ const SingleProperty = () => {
             {address && (
               <div>
                 <p className="font-semibold text-sm">Address</p>
-                <p className="">{getAddress(address)}</p>
+                <p className="">{getAddressFromObject(address)}</p>
               </div>
             )}
 
