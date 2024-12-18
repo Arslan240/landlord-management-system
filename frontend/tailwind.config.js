@@ -29,6 +29,9 @@ export default {
           DEFAULT: "#FD6365",
           light: "#FFE3E3",
         },
+        error: {
+          DEFAULT: "#f00a32",
+        },
       },
     },
   },
