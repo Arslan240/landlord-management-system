@@ -79,7 +79,7 @@ async function onlineTenantLeaseController({ propertyDetails, tenantDetails, use
   if (!lease) {
     throw new Error("Something went wrong. Please try again.")
   }
-  return res
+  res
     .status(StatusCodes.CREATED)
     .json({ msg: `Lease request is sent to ${name}. Please wait patiently, you'll be notified when tenant accepts the lease.` })
 }
