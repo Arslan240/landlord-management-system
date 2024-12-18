@@ -15,9 +15,17 @@ const getLeases = async (req, res) => {
 const getSingleLease = async (req, res) => {
   const { id } = req.params
 
-  const lease = await Lease.findOne({ _id: id }).populate("propertyId", "owner")
+  const lease = await Lease.findOne({ _id: id }).populate("propertyId", "address name").populate("landlordId", "name")
 
-  res.json({ lease: lease })
+  // I could also use mongodb aggregation, but i choose this was easy to understand and maintain, later I can convert to aggregation if needed
+  const transformedLease = lease.toObject()
+  transformedLease.property = transformedLease.propertyId
+  transformedLease.landlord = transformedLease.landlordId
+
+  delete transformedLease.propertyId
+  delete transformedLease.landlordId
+
+  res.json({ lease: transformedLease })
 }
 
 const addLease = async (req, res) => {
