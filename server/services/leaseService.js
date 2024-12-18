@@ -25,7 +25,7 @@ async function addLeaseService({ tenantDetails, propertyDetails, landlordId }) {
   if (isOffline) {
     status = "accepted"
   }
-  const lease = await Lease.create({ tenantId, propertyId, rent, deposit, startDate, endDate, terms, status })
+  const lease = await Lease.create({ landlordId, tenantId, propertyId, rent, deposit, startDate, endDate, terms, status })
   if (!lease) {
     throw new Error("Lease didn't create, Please try again")
   }

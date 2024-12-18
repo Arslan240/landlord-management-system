@@ -13,6 +13,10 @@ const leaseSchema = new mongoose.Schema({
     ref: "Property",
     required: [true, "Please provide appropriate property Id"],
   },
+  landlordId: {
+    type: mongoose.Types.ObjectId,
+    ref: "User",
+  },
   rent: {
     type: Number,
     required: [true, "Please provide appropriate number"],
