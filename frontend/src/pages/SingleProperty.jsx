@@ -7,6 +7,7 @@ import Carousel from "../components/Carousel"
 import TableRenderer from "../components/TableRenderer"
 import RequireAuth from "../components/RequireAuth"
 import { tenantValues } from "../tenantValues"
+import { CLOUDFRONT } from "../constants"
 
 const getIdFromPathname = (pathname) => {
   const regex = /[^/]+$/
@@ -20,8 +21,6 @@ const tenantHeadings = ["Name", "Email", "Lease End", "Rent", "Availability"]
 //   ["Abraham", "abraham@gmail.com", "23 Jan, 2030", "$340", "available"],
 //   ["Hailey", "hailey@gmail.com", "9 August, 2025", "$670", "occupied"],
 // ]
-
-const cloudfront = "https://d299qmc6osrfqv.cloudfront.net"
 
 const SingleProperty = () => {
   const { pathname } = useLocation()
@@ -40,7 +39,7 @@ const SingleProperty = () => {
 
   const { name, address, details, available } = data
   const { beds, baths, sqft, garage, rent, yearBuilt, furnished, petFriendly } = details
-  let newImages = data.images.map((id) => `${cloudfront}/${id}`)
+  let newImages = data.images.map((id) => `${CLOUDFRONT}/${id}`)
 
   return (
     <OutletPageWrapper title={`${data.name}`}>
