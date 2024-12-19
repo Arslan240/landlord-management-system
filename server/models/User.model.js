@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const validator = require("validator")
 const bcrypt = require("bcryptjs")
+const { ROLE_ADMIN, ROLE_LANDLORD, ROLE_TENANT, ROLE_USER } = require("../constants")
 
 // TODO: add gender in user and on frontend. Also update all the controllers to get the placeholder avatar using the gender and complete name.
 const UserSchema = new mongoose.Schema({
@@ -21,8 +22,8 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: [String],
-    enum: ["admin", "landlord", "tenant", "user"], //user is both landlord and tenant based on his acivity.
-    default: ["user"],
+    enum: [ROLE_ADMIN, ROLE_LANDLORD, ROLE_TENANT, ROLE_USER], //user is both landlord and tenant based on his acivity.
+    default: [ROLE_USER],
   },
   password: {
     type: String,
