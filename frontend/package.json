@@ -17,6 +17,7 @@
     "axios": "^1.7.7",
     "lodash": "^4.17.21",
     "lucide-react": "^0.456.0",
+    "moment": "^2.30.1",
     "motion": "^11.11.17",
     "rc-slider": "^11.1.7",
     "rc-tooltip": "^6.2.1",
