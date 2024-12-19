@@ -1,5 +1,5 @@
 const express = require("express")
-const { getLeases, addLease, getSingleLease } = require("../controllers/lease.controller")
+const { getLeases, addLease, getSingleLease, updateLease } = require("../controllers/lease.controller")
 const { authMiddleware } = require("../middlewares/auth.middleware")
 const router = express.Router()
 
@@ -9,6 +9,6 @@ router
   .get(authMiddleware, getLeases) //get all leases
   .post(authMiddleware, addLease) //create new lease
 
-router.route("/:id").get(authMiddleware, getSingleLease)
+router.route("/:id").get(authMiddleware, getSingleLease).patch(authMiddleware, updateLease)
 
 module.exports = router

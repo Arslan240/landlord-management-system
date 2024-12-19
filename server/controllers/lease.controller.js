@@ -68,10 +68,19 @@ const addLease = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ msg: "Lease added successfully", data: lease })
 }
 
+const updateLease = async (req, res) => {
+  const { id } = req.params
+
+  const lease = await updateLeaseService({ data: { leaseId: id, ...req.body }, user: req.user })
+
+  res.status(StatusCodes.OK).json({ msg: "Lease have been updated successfully", lease })
+}
+
 module.exports = {
   getLeases,
   getSingleLease,
   addLease,
+  updateLease,
 }
 
 // extract lease service from it, maybe online tenant lease service, offline tenant lease service
