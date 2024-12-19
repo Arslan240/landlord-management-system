@@ -1,12 +1,14 @@
 import { toast } from "react-toastify"
 import moment from "moment"
-import { useLoaderData } from "react-router-dom"
+import { Navigate, useLoaderData, useNavigate, useSearchParams } from "react-router-dom"
 import { fetchLease } from "../queries/useFetchLease"
 import OutletPageWrapper from "../components/OutletPageWrapper"
-import { getAddressFromObject, getErrorMessage } from "../utils"
+import { customFetch, getAddressFromObject, getErrorMessage } from "../utils"
 import { useUserState } from "../redux/userSlice"
 import { CLOUDFRONT } from "../constants"
 import Carousel from "../components/Carousel"
+import { useState } from "react"
+import Btn from "../components/Btn"
 
 export const acceptLeaseLoader =
   (queryClient) =>
@@ -29,9 +31,16 @@ export const acceptLeaseLoader =
 // resources: https://venngage.com/blog/lease-agreement/
 const AcceptLease = () => {
   const data = useLoaderData()
+  const navigate = useNavigate()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [statusValue, setStatusValue] = useState(null)
+
+  const [searchParams] = useSearchParams()
   const { name } = useUserState()
-  const { landlord, property, startDate, endDate, rent, deposit } = data
+
+  const { landlord, property, startDate, endDate, rent, deposit, status } = data
   const { name: propertyName, images } = property
+
   const propertyImages = images.map((imageId) => `${CLOUDFRONT}/${imageId}`)
 
   const start = moment(startDate).format("MMMM do, YYYY")
@@ -42,8 +51,35 @@ const AcceptLease = () => {
   const address = getAddressFromObject(property.address)
   const title = propertyName || address
 
-  const acceptHandler = async () => {}
-  const rejectHandler = async () => {}
+  const acceptLeaseHandler = async (status) => {
+    try {
+      setIsSubmitting(true)
+      setStatusValue(status)
+      const { data } = await customFetch.patch(`leases/${searchParams.get("leaseId")}`, {
+        status,
+      })
+      const { msg, data: updatedLease } = data
+      const successMessage = status === "accepted" ? "You've accepted the lease successfully" : "You've rejected the lease successfully"
+      navigate("/dashboard/leases")
+      toast.success(successMessage)
+    } catch (error) {
+      const errorMessage = getErrorMessage(error)
+      toast.error(errorMessage)
+    } finally {
+      setIsSubmitting(false)
+      setStatusValue(null)
+    }
+  }
+
+  if (status === "accepted" || status === "rejected") {
+    toast.info("You've already responded to the lease request")
+    return <Navigate to={"/dashboard/leases"} />
+  }
+
+  if (status === "cancelled") {
+    toast.info("Landlord has withdrawn the lease request. Kindly contact the landlord for a new lease")
+    return <Navigate to={"/dashboard/leases"} />
+  }
 
   return (
     <OutletPageWrapper title={"Accept Lease"}>
@@ -98,12 +134,22 @@ const AcceptLease = () => {
         </div>
       </div>
       <div className="flex gap-3">
-        <button onClick={acceptHandler} className="btn btn-success text-white rounded-full ">
+        <Btn
+          text={"Accept"}
+          clickHandler={() => acceptLeaseHandler("accepted")}
+          isSubmitting={isSubmitting && statusValue === "accepted"}
+          classNames="btn-success text-white rounded-full "
+        >
           Accept
-        </button>
-        <button onClick={rejectHandler} className="btn btn-error text-white rounded-full">
+        </Btn>
+        <Btn
+          text={"Reject"}
+          clickHandler={() => acceptLeaseHandler("rejected")}
+          isSubmitting={isSubmitting && statusValue === "rejected"}
+          classNames="btn-error text-white rounded-full"
+        >
           Reject
-        </button>
+        </Btn>
       </div>
     </OutletPageWrapper>
   )
