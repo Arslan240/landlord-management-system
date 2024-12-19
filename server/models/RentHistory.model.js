@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const moment = require("moment")
 const Property = require("./Property.model")
+const { RENT_STATUS_UNPAID, RENT_STATUS_PAID } = require("../constants")
 
 const RentHistorySchema = new mongoose.Schema({
   renterId: {
@@ -24,8 +25,8 @@ const RentHistorySchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ["paid", "unpaid"],
-    default: "unpaid",
+    enum: [RENT_STATUS_PAID, RENT_STATUS_UNPAID],
+    default: RENT_STATUS_UNPAID,
   },
   paymentId: {
     type: mongoose.Types.ObjectId,
