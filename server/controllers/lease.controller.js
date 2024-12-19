@@ -16,6 +16,9 @@ const getSingleLease = async (req, res) => {
   const { id } = req.params
 
   const lease = await Lease.findOne({ _id: id }).populate("propertyId", "address name images").populate("landlordId", "name")
+  if (!lease) {
+    throw new NotFoundError("Lease not found. Please contact your landlord/admin")
+  }
 
   // I could also use mongodb aggregation, but i choose this was easy to understand and maintain, later I can convert to aggregation if needed
   const transformedLease = lease.toObject()
