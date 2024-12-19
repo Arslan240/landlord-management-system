@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const { User } = require("./User.model")
 const { PropertyDetailsSchema } = require("./PropertyDetailsSchema.model")
+const { PROPERTY_CAT_APARTMENT, PROPERTY_CAT_SFH, PROPERTY_CAT_TOWNHOUSE, PROPERTY_CAT_CONDO } = require("../constants")
 
 /**
  * sqft
@@ -41,8 +42,8 @@ const PropertySchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["Apartment", "Single Family House", "Townhouse", "Condo"],
-      default: "Single Family House",
+      enum: [PROPERTY_CAT_APARTMENT, PROPERTY_CAT_SFH, PROPERTY_CAT_TOWNHOUSE, PROPERTY_CAT_CONDO],
+      default: PROPERTY_CAT_SFH,
     },
     images: {
       type: [String],
