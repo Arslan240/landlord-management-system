@@ -29,8 +29,8 @@ const Carousel = ({ children, slides, autoslide, autoSlideInterval = 2000, round
       <div className="overflow-hidden relative w-full h-full ">
         <div className={`flex transition-transform duration-500`} style={{ transform: `translateX(-${curr * 100}%)` }}>
           {slides.map((item, index) => (
-            <div className={`w-full flex-shrink-0 ${spaceBetweenImages ? "p-2" : ""}`}>
-              <div key={index} className={`overflow-hidden ${roundedClass ? roundedClass : ""}`}>
+            <div className={`w-full flex-shrink-0 ${spaceBetweenImages ? "p-2" : ""}`} key={index}>
+              <div className={`overflow-hidden ${roundedClass ? roundedClass : ""}`}>
                 <img src={item} alt={`Slide ${index}`} className={`w-full ${imageHeightClass ? imageHeightClass : "h-[20rem]"} object-cover`} />
               </div>
             </div>
