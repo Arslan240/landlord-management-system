@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { PAY_METHOD_BANK_TRANSFER, PAY_METHOD_CREDIT_CARD, PAY_METHOD_CASH } = require("../constants")
 
 // base schema
 const baseTransactionSchema = new mongoose.Schema(
@@ -23,7 +24,7 @@ const baseTransactionSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["bank transfer", "credit card", "cash"],
+      enum: [PAY_METHOD_BANK_TRANSFER, PAY_METHOD_CREDIT_CARD, PAY_METHOD_CASH],
       required: [true, "Please provide payment method"],
     },
     transactionId: {
