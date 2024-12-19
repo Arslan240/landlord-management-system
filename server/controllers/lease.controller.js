@@ -6,7 +6,7 @@ const Lease = require("../models/Lease.model")
 const Property = require("../models/Property.model")
 const sendLeaseAcceptanceEmail = require("../utils/sendLeaseAcceptanceEmail")
 const { addTenantService } = require("../services/tenantService")
-const { addLeaseService } = require("../services/leaseService")
+const { addLeaseService, updateLeaseService } = require("../services/leaseService")
 
 const getLeases = async (req, res) => {
   res.send("Get Leases")
@@ -84,10 +84,15 @@ async function onlineTenantLeaseController({ propertyDetails, tenantDetails, use
     throw new BadRequestError(`Tenant with ${email} and Govt Id ${idNumber} doesn't exist. Please correct tenant details and submit again`)
   }
 
-  const lease = await addLeaseService({ tenantDetails: { email, tenant: tenantDetails }, propertyDetails, landlordId: userId })
+  const lease = await addLeaseService({
+    tenantDetails: { email, tenant: { _id: tenant._id, ...tenantDetails } },
+    propertyDetails,
+    landlordId: userId,
+  })
   if (!lease) {
     throw new Error("Something went wrong. Please try again.")
   }
+
   res
     .status(StatusCodes.CREATED)
     .json({ msg: `Lease request is sent to ${name}. Please wait patiently, you'll be notified when tenant accepts the lease.` })
