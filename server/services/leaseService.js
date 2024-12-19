@@ -29,6 +29,7 @@ async function addLeaseService({ tenantDetails, propertyDetails, landlordId }) {
   if (!lease) {
     throw new Error("Lease didn't create, Please try again")
   }
+  console.log("Lease created successfully")
   if (!isOffline) {
     await sendLeaseAcceptanceEmail({ email, name, leaseDetails: { address: propertyOwns.address, leaseId: lease._id } })
     console.log("Accept lease email sent successfully")
