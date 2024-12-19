@@ -73,7 +73,7 @@ const updateLease = async (req, res) => {
 
   const lease = await updateLeaseService({ data: { leaseId: id, ...req.body }, user: req.user })
 
-  res.status(StatusCodes.OK).json({ msg: "Lease have been updated successfully", lease })
+  res.status(StatusCodes.OK).json({ msg: "Lease have been updated successfully", data: lease })
 }
 
 module.exports = {
