@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { LEASE_PENDING, LEASE_ACCEPTED, LEASE_REJECTED, LEASE_CANCELLED } = require("../constants")
 
 const leaseSchema = new mongoose.Schema({
   tenantId: {
@@ -31,8 +32,8 @@ const leaseSchema = new mongoose.Schema({
   status: {
     // rejected: tenant rejects, cancelled: landlord withdraws, if already rejected / cancelled, you can't change the status
     type: String,
-    enum: ["pending", "accepted", "rejected", "cancelled"],
-    default: "pending",
+    enum: [LEASE_PENDING, LEASE_ACCEPTED, LEASE_REJECTED, LEASE_CANCELLED],
+    default: LEASE_PENDING,
   },
 })
 
