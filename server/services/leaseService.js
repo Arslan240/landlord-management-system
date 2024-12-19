@@ -1,4 +1,5 @@
-const { BadRequestError, NotFoundError, UnAuthenticateError } = require("../errors")
+const { LEASE_ACCEPTED, LEASE_REJECTED, LEASE_CANCELLED } = require("../constants")
+const { BadRequestError, NotFoundError, UnAuthenticateError, UnAuthorizedError } = require("../errors")
 const Lease = require("../models/Lease.model")
 const Property = require("../models/Property.model")
 const sendLeaseAcceptanceEmail = require("../utils/sendLeaseAcceptanceEmail")
@@ -37,6 +38,39 @@ async function addLeaseService({ tenantDetails, propertyDetails, landlordId }) {
   return lease
 }
 
+async function updateLeaseService({ data, user }) {
+  const { status, leaseId } = data
+  const { id: userId } = user
+
+  const lease = await Lease.findById(leaseId)
+  if (!lease) {
+    throw new NotFoundError("Lease not found")
+  }
+
+  const tenantId = lease.tenantId?.toString()
+  const landlordId = lease.landlordId?.toString()
+
+  // only landlord and tenant included in the lease can update it
+  if (userId !== tenantId && userId !== landlordId) {
+    throw new UnAuthorizedError("You're not authorized for this operation")
+  }
+
+  // if status is being updated to success, then only tenant can do that, similarly if changed to cancelled only landlord can do that.
+  if (lease.status !== status && (status === LEASE_ACCEPTED || status === LEASE_REJECTED) && userId === landlordId) {
+    throw new UnAuthorizedError("Only tenant can accept or reject the lease")
+  }
+  // if status is being updated to cancelled, only landlord can do that
+  if (lease.status !== status && status === LEASE_CANCELLED && userId === tenantId) {
+    throw new UnAuthorizedError("Only landlord can cancel the lease")
+  }
+
+  lease.status = status
+  await lease.save()
+
+  return lease
+}
+
 module.exports = {
   addLeaseService,
+  updateLeaseService,
 }
