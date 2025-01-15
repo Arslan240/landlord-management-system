@@ -9,6 +9,7 @@ const LEASE_PENDING = "pending"
 const LEASE_ACCEPTED = "accepted"
 const LEASE_REJECTED = "rejected"
 const LEASE_CANCELLED = "cancelled"
+const LEASE_FINISHED = "finished"
 
 // PROPERTY MODEL CATEGORIES
 const PROPERTY_CAT_APARTMENT = "Apartment"
@@ -34,6 +35,7 @@ module.exports = {
   LEASE_ACCEPTED,
   LEASE_REJECTED,
   LEASE_CANCELLED,
+  LEASE_FINISHED,
   PROPERTY_CAT_APARTMENT,
   PROPERTY_CAT_SFH,
   PROPERTY_CAT_TOWNHOUSE,

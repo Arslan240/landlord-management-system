@@ -32,7 +32,7 @@ const leaseSchema = new mongoose.Schema({
   status: {
     // rejected: tenant rejects, cancelled: landlord withdraws, if already rejected / cancelled, you can't change the status
     type: String,
-    enum: [LEASE_PENDING, LEASE_ACCEPTED, LEASE_REJECTED, LEASE_CANCELLED],
+    enum: [LEASE_PENDING, LEASE_ACCEPTED, LEASE_REJECTED, LEASE_CANCELLED, LEASE_FINISHED],
     default: LEASE_PENDING,
   },
 })
