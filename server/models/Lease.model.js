@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const { LEASE_PENDING, LEASE_ACCEPTED, LEASE_REJECTED, LEASE_CANCELLED } = require("../constants")
+const { LEASE_PENDING, LEASE_ACCEPTED, LEASE_REJECTED, LEASE_CANCELLED, LEASE_FINISHED } = require("../constants")
 
 const leaseSchema = new mongoose.Schema({
   tenantId: {
