@@ -9,7 +9,20 @@ const { addTenantService } = require("../services/tenantService")
 const { addLeaseService, updateLeaseService } = require("../services/leaseService")
 
 const getLeases = async (req, res) => {
-  res.send("Get Leases")
+  const { id } = req.user
+  const leases = await Lease.find({
+    $or: [
+      { tenantId: id },
+      { landlordId: id }
+    ]
+  })
+
+  if (!leases) {
+    return res.status(StatusCodes.OK).json({ data: [], length: 0 })
+  }
+
+
+  res.status(StatusCodes.OK).json({ data: leases, length: leases.length })
 }
 
 const getSingleLease = async (req, res) => {
@@ -75,6 +88,8 @@ const updateLease = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ msg: "Lease have been updated successfully", data: lease })
 }
+
+
 
 module.exports = {
   getLeases,
