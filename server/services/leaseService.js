@@ -4,6 +4,9 @@ const Lease = require("../models/Lease.model")
 const Property = require("../models/Property.model")
 const sendLeaseAcceptanceEmail = require("../utils/sendLeaseAcceptanceEmail")
 
+
+// TODO: when creating lease, make sure, no duplicate lease is created e.g. same property, same tenant, same date with same status, if there is a lease already, we can't create a new one, rather we should update the previous one. When lease is updated, the tenant should also get a new email with updated details. Also the cancel button should not be hidden from landlord, because when the lease finishes or he needs to cancel he must be able to do it. 
+// TODO: When lease finishes the lease status should be updated to finished and if a lease is finished, then landlord or tenant should not be able to do anything with it.
 async function addLeaseService({ tenantDetails, propertyDetails, landlordId }) {
   const { propertyId, rent, deposit, startDate, endDate, terms } = propertyDetails
   const { email, tenant } = tenantDetails
