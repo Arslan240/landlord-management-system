@@ -7,6 +7,11 @@ export const fetchLease = async (leaseId) => {
   return data.lease
 }
 
+export const fetchAllLeases = async () => {
+  const {data} = await customFetch(`leases`)
+  return data
+}
+
 const useFetchLease = ({ leaseId }) => {
   return useQuery({
     queryKey: ["leases", leaseId],
