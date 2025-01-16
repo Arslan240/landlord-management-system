@@ -21,8 +21,10 @@ const getLeases = async (req, res) => {
     return res.status(StatusCodes.OK).json({ data: [], length: 0 })
   }
 
+  console.log(leases);
 
-  res.status(StatusCodes.OK).json({ data: leases, length: leases.length })
+
+  res.status(StatusCodes.OK).json({ data: { leases }, length: leases.length })
 }
 
 const getSingleLease = async (req, res) => {
